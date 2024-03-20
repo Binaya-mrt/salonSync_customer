@@ -1,7 +1,9 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:salonsync/Screens/Notification.dart';
 import 'package:salonsync/Screens/shop_details.dart';
@@ -19,42 +21,45 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-     var _salons = Provider.of<ListProvider>(context, listen: false);
-    _salons.getSalons(context);
+    //  var _salons = Provider.of<ListProvider>(context, listen: false);
+    // _salons.getSalons(context);
 
-      final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+    final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-   
-   List<String> list = ['assets/images/pp1.jpg','assets/images/pp2.jpg','assets/images/pp3.jpg'];
+    List<String> list = [
+      'assets/images/pp1.jpg',
+      'assets/images/pp2.jpg',
+      'assets/images/pp3.jpg'
+    ];
     return Scaffold(
       key: _scaffoldKey,
       resizeToAvoidBottomInset: false,
-      appBar: appBar(context,_scaffoldKey),
+      appBar: appBar(context, _scaffoldKey),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-           Container(
-          child: CarouselSlider(
-        options: CarouselOptions(
-           autoPlay: true,
-        ),
-        items: list
-            .map((item) => Container(
-              height: 300,
-              width: MediaQuery.of(context).size.width,
-              decoration: const BoxDecoration(color: Colors.white),
-              margin: const EdgeInsets.symmetric(vertical: 15),
-                  child: Image(image: AssetImage(item),fit: BoxFit.fitWidth,),
-                 
-                ))
-            .toList(),)),
-    
+            Container(
+                child: CarouselSlider(
+              options: CarouselOptions(
+                autoPlay: true,
+              ),
+              items: list
+                  .map((item) => Container(
+                        height: 300,
+                        width: MediaQuery.of(context).size.width,
+                        decoration: const BoxDecoration(color: Colors.white),
+                        margin: const EdgeInsets.symmetric(vertical: 15),
+                        child: Image(
+                          image: AssetImage(item),
+                          fit: BoxFit.fitWidth,
+                        ),
+                      ))
+                  .toList(),
+            )),
 
-        
-            
             // Container(
-              
+
             // ),
             _searchField(),
             _categoriesSection(),
@@ -88,7 +93,8 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       // Slider to control drawer opening
-      drawerEnableOpenDragGesture: false,);// Disable default swipe gesture
+      drawerEnableOpenDragGesture: false,
+    ); // Disable default swipe gesture
     //   endDrawer: Slider(
     //     value: _drawerOpenAmount,
     //     onChanged: (double value) => setState(() => _drawerOpenAmount = value),
@@ -96,10 +102,9 @@ class _HomePageState extends State<HomePage> {
     //     max: 1.0,
     //   ),
     // );
-  
   }
 
-  AppBar appBar(BuildContext context,key) {
+  AppBar appBar(BuildContext context, key) {
     return AppBar(
       title: const Text(
         "SalonSync",
@@ -117,7 +122,7 @@ class _HomePageState extends State<HomePage> {
       actions: [
         IconButton(
             onPressed: () {
-               key.currentState!.openEndDrawer();
+              key.currentState!.openEndDrawer();
               // Navigator.push(
               //   context,
               //   MaterialPageRoute(
@@ -228,14 +233,22 @@ class _HomePageState extends State<HomePage> {
               width: 25,
             ),
             itemBuilder: (context, index) {
-List<String>_services=['Barbar','Shaving','Haricut','Straight','Barbar','Shaving','Haricut',];              
+              List<String> _services = [
+                'Barbar',
+                'Shaving',
+                'Haricut',
+                'Straight',
+                'Barbar',
+                'Shaving',
+                'Haricut',
+              ];
               return Column(
                 children: [
-                
-                   CircleAvatar(
-            backgroundImage: AssetImage('assets/images/s${index+1}.png'),
-            radius: 40,
-          ),
+                  CircleAvatar(
+                    backgroundImage:
+                        AssetImage('assets/images/s${index + 1}.png'),
+                    radius: 40,
+                  ),
                   Text(
                     _services[index],
                     style: const TextStyle(
@@ -279,72 +292,114 @@ List<String>_services=['Barbar','Shaving','Haricut','Straight','Barbar','Shaving
         const SizedBox(
           height: 10,
         ),
-        Consumer<ListProvider>(builder: (context, salons, child) {
-          log("calling salon provider from home");
-         
-          return Container(
-            height: 280,
-            child: ListView.separated(
-              itemCount: salons.salonLists.length >5?5:salons.salonLists.length,
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
-              separatorBuilder: (context, index) => const SizedBox(
-                width: 25,
-              ),
-              itemBuilder: (context, index) {
-                log(salons.salonLists.length.toString());
-                return GestureDetector(
-                  onTap: (){
-                  log(salons.salonLists.length.toString());
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>SalonSetail(current_salon_index: index,endTime:salons.salonLists[index].saon_end_time ,startTime: salons.salonLists[index].salon_start_time,name: salons.salonLists[index].salon_name,)));
-                  },
-                  child: Container(
-                      height: 280,
-                      width: 200,
-                      decoration: BoxDecoration(
-                          color: Colors.grey,
-                          borderRadius: BorderRadius.circular(16)),
-                      child: Column(crossAxisAlignment: CrossAxisAlignment.start,children: [
-                        Container(
-                          height: 150,
-                          width: 200,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(image: AssetImage('assets/images/salon.jpg'),fit: BoxFit.cover),
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [Text(salons.salonLists[index].salon_name,style: pstyle,), Text('4.5',style: pstyle,)],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [Text(salons.salonLists[index].salon_address,style: pstyle,), Text('4.5 KM',style: pstyle,)],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left:10.0),
-                          child: ElevatedButton(
-                            onPressed: () {
-                              // Your button action here
-                            },
-                            child: Text('See Details',style:TextStyle(fontSize: 12,color: Colors.white),),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: themeColor,
-                              shape: RoundedRectangleBorder(
-                                
-                                borderRadius: BorderRadius.circular(10.0), // Adjust as desired
-                              ),
-                            ),
-                          ),
-                        ),
-                      ])),
+        FutureBuilder(
+          future: FirebaseFirestore.instance.collection('Salon').get(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              final List<DocumentSnapshot> documents = snapshot.data!.docs;
+             
+                return Container(
+                  height: 280,
+                  // color:Colors.red,
+                  child: ListView.separated(
+                    itemCount: documents.length,
+                    scrollDirection: Axis.horizontal,
+                    padding:
+                        const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+                    separatorBuilder: (context, index) => const SizedBox(
+                      width: 25,
+                    ),
+                    itemBuilder: (context, index) {
+                       for (var doc in documents) {
+                      return 
+                      GestureDetector(
+                        onTap: () {
+                          log('Tapped');
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=>SalonSetail(uid:doc['uid'],name: doc['salon_name'],)));
+                        },
+                        child: Container(
+                            height: 280,
+                            width: 200,
+                            decoration: BoxDecoration(
+                                color: Colors.grey,
+                                borderRadius: BorderRadius.circular(16)),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    height: 150,
+                                    width: 200,
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                          image:
+                                              NetworkImage(doc['salon_image']),
+                                          fit: BoxFit.cover),
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Text(
+                                        doc['salon_name'],
+                                        style: pstyle,
+                                      ),
+                                      Text(
+                                        '4.5',
+                                        style: pstyle,
+                                      )
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Text(
+                                        doc['salon_address'],
+                                        style: pstyle,
+                                      ),
+                                      Text(
+                                        '4.5 KM',
+                                        style: pstyle,
+                                      )
+                                    ],
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 10.0),
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        // Your button action here
+                                      },
+                                      child: Text(
+                                        'See Details',
+                                        style: TextStyle(
+                                            fontSize: 12, color: Colors.white),
+                                      ),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: themeColor,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                              10.0), // Adjust as desired
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ])),
+                      );
+                  
+                    }
+                    }
+                  ),
                 );
-              },
-            ),
-          );
-        }
+              }
+             else if (snapshot.hasError) {
+              return Text("Hello");
+            }
+            return Divider();
+          },
         )
-     ],
+      ],
     );
   }
 }
