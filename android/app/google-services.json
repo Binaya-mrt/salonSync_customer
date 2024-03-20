@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "255426473244",
+    "project_id": "salonsync-15e10",
+    "storage_bucket": "salonsync-15e10.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:255426473244:android:f210080a1cebb68570ded9",
+        "android_client_info": {
+          "package_name": "com.example.salonsync"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "255426473244-j9dr5i76f2k97a8b1t955ivu0shroq8h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXZYuLRhj6cQPL1RCGjGbqc7HUJKFm_zA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "255426473244-j9dr5i76f2k97a8b1t955ivu0shroq8h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
