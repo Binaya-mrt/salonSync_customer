@@ -8,9 +8,11 @@ import 'package:image_network/image_network.dart';
 import 'package:provider/provider.dart';
 import 'package:salonsync/constants.dart';
 import 'package:intl/intl.dart';
-import 'package:salonsync/controller/Auth/Fetch_Appointments.dart';
-import 'package:salonsync/models/Salon_model.dart';
-import 'package:salonsync/models/User_model.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+
+import 'package:horizontal_center_date_picker/datepicker_controller.dart';
+import 'package:horizontal_center_date_picker/horizontal_date_picker.dart';
 
 class SalonSetail extends StatefulWidget {
   final String uid;
@@ -20,11 +22,24 @@ class SalonSetail extends StatefulWidget {
   @override
   State<SalonSetail> createState() => _SalonSetailState();
 }
+int selectedIndex=-1;
+int bookedIndex=-1;
+String selected_service_name='';
+int selected_service_price=-1;
+Timestamp  bookedSlot=Timestamp.now();
+
+
+ DatePickerController _datePickerController = DatePickerController();
+
+  var now = DateTime.now();
+    DateTime startDate = now.subtract(Duration(days: 0));
+    DateTime endDate = now.add(Duration(days: 5));
+    
 
 class _SalonSetailState extends State<SalonSetail> {
 // required this.current_salon_index,required this.endTime,required this.startTime,required this.name
-Catalouge? selectedService;
   @override
+
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
@@ -131,7 +146,7 @@ Catalouge? selectedService;
                                   }),
                             ),
                              Container(
-          height: 80,
+          height: 100,
           child: ListView.separated(
             itemCount: doc['catalogues'].length,
             scrollDirection: Axis.horizontal,
@@ -152,28 +167,31 @@ String formatServiceDuration(int durationInMinutes) {
   }
 }
 String formatedDuration=formatServiceDuration(int.parse(doc['catalogues'][index]['duration']));
-String selected_service_name=doc['catalogues'][index]['servicename'];
-int selected_service_price=doc['catalogues'][index]['price'];
+
 
 
             // int isSelected = doc['catalogues'][index];
           
            
               return GestureDetector(
-                
+              
                 onTap: (){
                   
-                   setState(() {
-                    //  bool isSelected=false;
-                  // Toggle selection
-                  selected_service_name =  doc['catalogues'][index]['servicename'];
+                  setState(() {
+                    selected_service_name =  doc['catalogues'][index]['servicename'];
                   selected_service_price=doc['catalogues'][index]['price'];
-                              // isSelected=doc['catalogues'][index];
-                });
+                  selectedIndex=index;
+                  log(selectedIndex.toString());
+                  });
+                 
                 
                 },
                 child: Container(
-                  // color:  isSelected? Colors.blueAccent : Colors.transparent,
+                  padding: EdgeInsets.all(8),
+                  decoration: BoxDecoration( color:  index==selectedIndex
+                  ? Colors.green.withOpacity(0.4):
+                                              themeColor.withOpacity(0.4),borderRadius: BorderRadius.circular(10)),
+                
                   child: Column(
                     
                     mainAxisSize: MainAxisSize.min,
@@ -217,6 +235,21 @@ int selected_service_price=doc['catalogues'][index]['price'];
             },
           ),
         ),
+        Container(
+      color: Colors.grey,
+      alignment: Alignment.center,
+      child: HorizontalDatePickerWidget(
+       selectedColor :themeColor.withOpacity(0.4),
+        startDate: startDate,
+        endDate: endDate,
+        selectedDate: now,
+        widgetWidth: MediaQuery.of(context).size.width,
+        datePickerController: _datePickerController,
+        onValueSelected: (date) {
+          print('selected = ${date.toIso8601String()}');
+        },
+      ),
+    ),
         Padding(
             padding: const EdgeInsets.only(left: 8,),
             child: Text(
@@ -228,7 +261,7 @@ int selected_service_price=doc['catalogues'][index]['price'];
             ),
           ),
         Container(
-                              // color: Colors.red,
+                            
                               height: 100,
                               margin: EdgeInsets.only(left: 5),
 
@@ -254,18 +287,31 @@ String getSalonTiming(Timestamp startTime) {
 
   return '$start ';
 }
+
 String start_time=getSalonTiming(doc['all_available_slots'][index]['slot_start_time']);
-                                    return Chip(
-                                        elevation: 10,
-                                        surfaceTintColor: Colors.red,
-                                        backgroundColor:
-                                            themeColor.withOpacity(0.4),
-                                        label: Text(
-                                            start_time,
-                                            style:
-                                                const TextStyle(fontSize: 20)));
+                                    return GestureDetector(
+                                      onTap: (){
+                                        setState(() {
+                                          bookedSlot=doc['all_available_slots'][index]['slot_start_time'];
+                                          bookedIndex=index;
+                                        });
+                                      },
+                                      child: Chip(
+                                          elevation: 10,
+                                          surfaceTintColor: Colors.red,
+                                          backgroundColor:
+                                          index==bookedIndex?Colors.green.withOpacity(0.4):
+                                              themeColor.withOpacity(0.4),
+                                          label: Text(
+                                              start_time,
+                                              style:
+                                                  const TextStyle(fontSize: 20))),
+                                    );
                                   }),
                             ),
+                            Center(child: ElevatedButton(onPressed: (){
+                              //appointId,salonId,UserId,serviceName,ServicePrice,status,slot,Date,payment
+                            }, child: Text('Book Now',style: TextStyle(fontSize: 20,color: Colors.white),)),)
                           ],
                         ),
                       );
