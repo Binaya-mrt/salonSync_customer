@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
-class Appointment {
+class AppointmentModel {
   final String customerId;
   final String salonId;
   final String serviceName;
@@ -12,7 +12,7 @@ class Appointment {
   final String status;
   final DateTime appointmentDateTime;
 
-  Appointment({
+  AppointmentModel({
     required this.customerId,
     required this.salonId,
     required this.serviceName,
@@ -50,7 +50,7 @@ class AppointmentService {
   final CollectionReference appointmentsCollection =
       FirebaseFirestore.instance.collection('Appointments');
 
-  Future<void> bookAppointment(Appointment appointment) async {
+  Future<void> bookAppointment(AppointmentModel appointment) async {
     try {
       await appointmentsCollection.add(appointment.toMap());
       log('Appointment booked successfully.');

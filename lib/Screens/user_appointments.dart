@@ -1,135 +1,92 @@
+import 'dart:developer';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:salonsync/Screens/notification.dart';
 import 'package:salonsync/constants.dart';
 import 'package:salonsync/controller/Auth/Fetch_Appointments.dart';
+import 'package:salonsync/controller/preferences_controller.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class Appointment extends StatelessWidget {
+class Appointment extends StatefulWidget {
   Appointment({super.key});
-// DateFormat dateFormat = DateFormat();
 
   @override
-  Widget build(BuildContext context) {
-    // var _appointment = Provider.of<ListProvider>(context, listen: false);
-    // _appointment.getAllAppointment(context);
+  State<Appointment> createState() => _AppointmentState();
+}
 
-   
+class _AppointmentState extends State<Appointment> {
+// DateFormat dateFormat = DateFormat();
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-        appBar: appBar(context),
-        body: SafeArea(
-          child: SingleChildScrollView(
-    //         child: Column(
-    //           children: [
-    //             Consumer<ListProvider>(builder: (context, appointments, child) {
-    //               return appointments.isLoading == true
-    //                   ? const Center(
-    //                       child: CircularProgressIndicator(),
-    //                     )
-    //                   : appointments.appointmentList.isEmpty
-    //                       ? const Text('No any appointments...')
-    //                       :ListView.builder(
-    //                         shrinkWrap: true,
-    //   itemCount: appointments.appointmentList.length,
-    //   itemBuilder: (BuildContext context, int index) {
-    //     return Card(
-    //       elevation: 2.0,
-    //       margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-    //       child: ListTile(
-    //         contentPadding: EdgeInsets.all(16.0),
-    //         title: Text(
-    //           appointments.appointmentList[index].salon,
-    //           style: TextStyle(fontWeight: FontWeight.bold),
-    //         ),
-    //         subtitle: Column(
-    //           mainAxisSize: MainAxisSize.min,
-    //           crossAxisAlignment: CrossAxisAlignment.start,
-    //           children: [
-    //             Text('Service: ${appointments.appointmentList[index].service}'),
-    //             // Text('Date & Time: ${appointments[index].dateTime.toString()}'),
-    //             Text('Status: ${appointments
-    //                                                     .appointmentList[index]
-    //                                                     .status}'),
-    //             Text('Payment: ${appointments
-    //                                             .appointmentList[index]
-    //                                             .payment ? 'Paid' : 'Due'}'),
-    //           ],
-    //         ),
-    //       ),
-    //     );
-    //   },
-    // );
-    //                       // : ListView.builder(
-    //                       //     shrinkWrap: true,
-    //                       //     physics: const NeverScrollableScrollPhysics(),
-    //                       //     itemCount: appointments.appointmentList.length,
-    //                       //     itemBuilder: (BuildContext context, int index) {
-    //                       //       return ListTile(
-    //                       //         leading: CircleAvatar(
-    //                       //           backgroundColor: appointments
-    //                       //                       .appointmentList[index]
-    //                       //                       .status ==
-    //                       //                   "Pending"
-    //                       //               ? Colors.amber
-    //                       //               : appointments.appointmentList[index]
-    //                       //                           .status ==
-    //                       //                       "Appointed"
-    //                       //                   ? Colors.green
-    //                       //                   : Colors.grey,
-    //                       //           child: Text(
-    //                       //             appointments.appointmentList[index]
-    //                       //                         .status ==
-    //                       //                     "Pending"
-    //                       //                 ? 'P'
-    //                       //                 : appointments.appointmentList[index]
-    //                       //                             .status ==
-    //                       //                         "Appointed"
-    //                       //                     ? "A"
-    //                       //                     : "C",
-    //                       //             style:
-    //                       //                 const TextStyle(color: Colors.white),
-    //                       //           ),
-    //                       //         ),
-    //                       //         title: Text(appointments
-    //                       //             .appointmentList[index].salon),
-    //                       //         subtitle: Text('dd/MM/yyyy - HH:mm'),
-    //                       //         trailing: Row(
-    //                       //           mainAxisSize: MainAxisSize
-    //                       //               .min, // Constrain trailing widget width
-    //                       //           children: [
-    //                       //             Text(
-    //                       //               appointments.appointmentList[index]
-    //                       //                           .status ==
-    //                       //                       "Pending"
-    //                       //                   ? 'Pending'
-    //                       //                   : appointments
-    //                       //                               .appointmentList[index]
-    //                       //                               .status ==
-    //                       //                           "Appointed"
-    //                       //                       ? "Appointed"
-    //                       //                       : "Canceled",
-    //                       //               style: TextStyle(color: themeColor),
-    //                       //             ),
-    //                       //             const SizedBox(
-    //                       //                 width: 5.0), // Add a small spacer
-    //                       //             Text(
-    //                       //               appointments
-    //                       //                   .appointmentList[index].payment?"Payment Done":"Payment Due",
-    //                       //               style:  TextStyle(
-    //                       //                   color: appointments
-    //                       //                   .appointmentList[index].payment?Colors.green:Colors.red),
-    //                       //             ),
-    //                       //           ],
-    //                       //         ),
-    //                       //       );
-    //                       //     },
-    //                       //   );
-    //             }),
-    //           ],
-            ),
-        
-        ));
+      appBar: appBar(context),
+      body:  FutureBuilder<QuerySnapshot>(
+        future: FirebaseFirestore.instance
+            .collection('Appointments')
+            .where('customerId', isEqualTo: PreferenceUtils.getString('uuid'))
+            .get(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return Center(child: Text('No appointments found.'));
+          } else {
+            final appointments = snapshot.data!.docs;
+            return ListView.builder(
+              shrinkWrap: true,
+              itemCount: appointments.length,
+              itemBuilder: (context, index) {
+                final appointment = appointments[index];
+                return AppointmentListItem(appointment: appointment);
+              },
+            );
+          }
+        },
+      ),
+    );
   }
-  
+  }
+
+  // void _showBottomSheet(BuildContext context, DocumentSnapshot appointment) {
+  //   showModalBottomSheet(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return Container(
+  //         padding: EdgeInsets.all(16.0),
+  //         child: Column(
+  //           mainAxisSize: MainAxisSize.min,
+  //           children: <Widget>[
+  //             Text('Appointment Details'),
+  //             SizedBox(height: 16.0),
+  //             Text('Title: ${appointment['serviceName']}'),
+  //             Text('Status: ${appointment['status']}'),
+  //             SizedBox(height: 16.0),
+  //             ElevatedButton(
+  //               onPressed: () {
+  //                 // Perform cancel operation
+  //                 Navigator.pop(context);
+  //               },
+  //               child: Text('Cancel Appointment'),
+  //             ),
+  //             ElevatedButton(
+  //               onPressed: () {
+  //                 // Perform update operation
+  //                 Navigator.pop(context);
+  //               },
+  //               child: Text('Update Appointment'),
+  //             ),
+  //           ],
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
+
   AppBar appBar(BuildContext context) {
     return AppBar(
       title: const Text(
@@ -161,5 +118,54 @@ class Appointment extends StatelessWidget {
       ],
     );
   }
+class AppointmentListItem extends StatelessWidget {
+  final DocumentSnapshot appointment;
 
+  const AppointmentListItem({Key? key, required this.appointment})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final salonId = appointment['salonId'];
+    final serviceName = appointment['serviceName'];
+    final status = appointment['status'];
+    final price = appointment['price'];
+    final appointmentDateTime = appointment['appointmentDateTime'];
+
+    // Fetch salon details from Firestore using salon ID
+    return FutureBuilder<DocumentSnapshot>(
+      future: FirebaseFirestore.instance
+          .collection('Salon')
+          .doc(salonId)
+          .get(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else if (!snapshot.hasData) {
+          return Text('Salon details not found');
+        } else {
+      final salonName = snapshot.data!['salon_name'];
+Timestamp timestamp = appointmentDateTime;
+DateTime dateTime = timestamp.toDate();
+String formattedDateTime = DateFormat('yyyy-MM-dd h a').format(dateTime);
+          return ListTile(
+            title: Text(serviceName),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Salon: $salonName'),
+                Text('Status: $status'),
+                Text('Price: $price'),
+                Text('Appointment Date: $formattedDateTime'),
+              ],
+            ),
+            // Add additional styling or actions as needed
+            // For example, you can add trailing icons for actions like cancel or update
+          );
+        }
+      },
+    );
+  }
 }

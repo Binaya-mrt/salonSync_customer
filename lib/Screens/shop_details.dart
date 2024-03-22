@@ -312,10 +312,11 @@ class _SalonSetailState extends State<SalonSetail> {
 bool is_available=await _appointmentService.isSlotAvailable(doc['uid'],selectedDate,hour);
 is_available?null:Utils().showSnackBar(context,"Slot not Available");
                         setState(() {
-                                            
+                                   is_available?   {      
                                           bookedSlot =
-                                          hour;
-                                          bookedIndex = index;
+                                          hour,
+                                          bookedIndex = index}
+                                          :null;
                                         });
                                         log(bookedSlot.toString());
                                       },
@@ -335,10 +336,10 @@ is_available?null:Utils().showSnackBar(context,"Slot not Available");
                               child: ElevatedButton(
                                   onPressed: () async{
                                      
-                                if(selected_service_price!=-1){      
+                                if(selected_service_price!=-1&& bookedSlot!=-1){      
 DateTime appointmentDatetime=DateTime(selectedDate.year,selectedDate.month,selectedDate.day,bookedSlot);
                                     SharedPreferences _prefs= await SharedPreferences.getInstance();
- Appointment appointment = Appointment(customerId: _prefs.getString('uuid').toString(), salonId:doc['uid'] , serviceName: selected_service_name, price: selected_service_price, payment: false, status: 'Pending', appointmentDateTime: appointmentDatetime );
+ AppointmentModel appointment = AppointmentModel(customerId: _prefs.getString('uuid').toString(), salonId:doc['uid'] , serviceName: selected_service_name, price: selected_service_price, payment: false, status: 'Pending', appointmentDateTime: appointmentDatetime );
  log(appointment.toString());
   _appointmentService.bookAppointment(appointment);
   
