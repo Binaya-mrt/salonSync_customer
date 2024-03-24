@@ -61,7 +61,8 @@ class _HomePageState extends State<HomePage> {
             // Container(
 
             // ),
-            _searchField(),
+            // _searchField(),
+            SalonSearchWidget(),
             _categoriesSection(),
             _featuredBarbers(),
           ],
@@ -297,103 +298,107 @@ class _HomePageState extends State<HomePage> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               final List<DocumentSnapshot> documents = snapshot.data!.docs;
-             
-                return Container(
-                  height: 280,
-                  // color:Colors.red,
-                  child: ListView.separated(
+
+              return Container(
+                height: 280,
+                // color:Colors.red,
+                child: ListView.separated(
                     itemCount: documents.length,
                     scrollDirection: Axis.horizontal,
                     padding:
                         const EdgeInsets.only(left: 20, right: 20, bottom: 20),
                     separatorBuilder: (context, index) => const SizedBox(
-                      width: 25,
-                    ),
+                          width: 25,
+                        ),
                     itemBuilder: (context, index) {
-                       for (var doc in documents) {
-                      return 
-                      GestureDetector(
-                        onTap: () {
-                          log('Tapped');
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=>SalonSetail(uid:doc['uid'],name: doc['salon_name'],)));
-                        },
-                        child: Container(
-                            height: 280,
-                            width: 200,
-                            decoration: BoxDecoration(
-                                color: Colors.grey,
-                                borderRadius: BorderRadius.circular(16)),
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    height: 150,
-                                    width: 200,
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                          image:
-                                              NetworkImage(doc['salon_image']),
-                                          fit: BoxFit.cover),
-                                      borderRadius: BorderRadius.circular(16),
+                      for (var doc in documents) {
+                        return GestureDetector(
+                          onTap: () {
+                            log('Tapped');
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SalonSetail(
+                                          uid: doc['uid'],
+                                          name: doc['salon_name'],
+                                        )));
+                          },
+                          child: Container(
+                              height: 280,
+                              width: 200,
+                              decoration: BoxDecoration(
+                                  color: Colors.grey,
+                                  borderRadius: BorderRadius.circular(16)),
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      height: 150,
+                                      width: 200,
+                                      decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                            image: NetworkImage(
+                                                doc['salon_image']),
+                                            fit: BoxFit.cover),
+                                        borderRadius: BorderRadius.circular(16),
+                                      ),
                                     ),
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Text(
-                                        doc['salon_name'],
-                                        style: pstyle,
-                                      ),
-                                      Text(
-                                        '4.5',
-                                        style: pstyle,
-                                      )
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Text(
-                                        doc['salon_address'],
-                                        style: pstyle,
-                                      ),
-                                      Text(
-                                        '4.5 KM',
-                                        style: pstyle,
-                                      )
-                                    ],
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 10.0),
-                                    child: ElevatedButton(
-                                      onPressed: () {
-                                        // Your button action here
-                                      },
-                                      child: Text(
-                                        'See Details',
-                                        style: TextStyle(
-                                            fontSize: 12, color: Colors.white),
-                                      ),
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: themeColor,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                              10.0), // Adjust as desired
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        Text(
+                                          doc['salon_name'],
+                                          style: pstyle,
+                                        ),
+                                        Text(
+                                          '4.5',
+                                          style: pstyle,
+                                        )
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        Text(
+                                          doc['salon_address'],
+                                          style: pstyle,
+                                        ),
+                                        Text(
+                                          '4.5 KM',
+                                          style: pstyle,
+                                        )
+                                      ],
+                                    ),
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(left: 10.0),
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          // Your button action here
+                                        },
+                                        child: Text(
+                                          'See Details',
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.white),
+                                        ),
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: themeColor,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                                10.0), // Adjust as desired
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ])),
-                      );
-                  
-                    }
-                    }
-                  ),
-                );
-              }
-             else if (snapshot.hasError) {
+                                  ])),
+                        );
+                      }
+                    }),
+              );
+            } else if (snapshot.hasError) {
               return Text("Hello");
             }
             return Divider();
@@ -404,3 +409,96 @@ class _HomePageState extends State<HomePage> {
   }
 }
 // salon['salon_name']
+
+class SalonSearchWidget extends StatefulWidget {
+  @override
+  _SalonSearchWidgetState createState() => _SalonSearchWidgetState();
+}
+
+class _SalonSearchWidgetState extends State<SalonSearchWidget> {
+  final TextEditingController _searchController = TextEditingController();
+  List<DocumentSnapshot> _salons = [];
+  List<DocumentSnapshot> _searchResults = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchSalons();
+  }
+
+  Future<void> _fetchSalons() async {
+    final snapshot = await FirebaseFirestore.instance.collection('Salon').get();
+    setState(() {
+      _salons = snapshot.docs;
+      _salons.sort((a, b) => a['salon_name'].compareTo(b['salon_name']));
+    });
+  }
+
+  void _searchSalons(String query) {
+    setState(() {
+      if (query.isEmpty) {
+        _searchResults.clear();
+      } else {
+        _searchResults = _salons
+             .where((salon) =>
+              salon['salon_name']
+                  .toString()
+                  .toLowerCase()
+                  .contains(query.toLowerCase()) ||
+              salon['salon_address']
+                  .toString()
+                  .toLowerCase()
+                  .contains(query.toLowerCase()))
+          .toList();
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextField(
+          controller: _searchController,
+          onChanged: _searchSalons,
+          decoration: InputDecoration(
+              focusColor: Colors.white,
+              filled: true,
+              fillColor: Colors.white,
+              hintText: 'Search Salons',
+              contentPadding: EdgeInsets.all(10),
+              hintStyle: TextStyle(color: Colors.black),
+              border: const OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.red),
+                  borderRadius: BorderRadius.all(Radius.circular(9.0)))),
+        ),
+        SizedBox(height: 10),
+        ListView.builder(
+          shrinkWrap: true,
+          itemCount: _searchResults.length,
+          itemBuilder: (context, index) {
+            final salon = _searchResults[index];
+            return ListTile(
+              tileColor: Colors.white,
+              
+              title: Text(salon['salon_name']),
+              subtitle: Text(salon['salon_address']),
+              onTap: () {
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => SalonDetailPage(
+                //       salonName: salon['salon_name'],
+                //       salonUid: salon.id,
+                //     ),
+                //   ),
+                // );
+              },
+            );
+          },
+        ),
+      ],
+    );
+  }
+}

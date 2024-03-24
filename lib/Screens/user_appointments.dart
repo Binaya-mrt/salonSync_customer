@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:salonsync/Screens/notification.dart';
@@ -42,6 +43,7 @@ class _AppointmentState extends State<Appointment> {
               itemCount: appointments.length,
               itemBuilder: (context, index) {
                 final appointment = appointments[index];
+
                 return AppointmentListItem(appointment: appointment);
               },
             );
@@ -150,19 +152,74 @@ class AppointmentListItem extends StatelessWidget {
 Timestamp timestamp = appointmentDateTime;
 DateTime dateTime = timestamp.toDate();
 String formattedDateTime = DateFormat('yyyy-MM-dd h a').format(dateTime);
-          return ListTile(
-            title: Text(serviceName),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Salon: $salonName'),
-                Text('Status: $status'),
-                Text('Price: $price'),
-                Text('Appointment Date: $formattedDateTime'),
-              ],
+          return Card(
+margin: const EdgeInsets.symmetric(vertical: 10,horizontal: 4),            child: ListTile(
+              trailing: appointment['status']=='Pending'?IconButton(icon: Icon(Icons.delete_forever,color: themeColor,),onPressed: (){
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Cancel Appointment'),
+                        content: Text('Are you sure you want to cancel this appointment?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text('No'),
+                          ),
+                          ElevatedButton(
+                            onPressed: () async{
+                            await appointment.reference.update({'status': 'Cancelled'});
+                              Navigator.pop(context); // Close the dialog
+                              
+                            },
+                            child: Text('Yes, Cancel'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+              
+              }):null,
+              title: Text(serviceName),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Salon: $salonName'),
+                  Text('Status: $status',style: TextStyle(color:status=='Pending'?Colors.lightGreen:status=="Completed"?themeColor:Colors.red),),
+                  Text('Price: NPR $price'),
+                  Text('Appointment Date: $formattedDateTime'),
+                   appointment['status']=='Pending'?TextButton(onPressed:(){showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Cancel Appointment'),
+                        content: Text('Are you sure you want to cancel this appointment?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text('No'),
+                          ),
+                          ElevatedButton(
+                            onPressed: () async{
+                            await appointment.reference.update({'status': 'Cancelled'});
+                              Navigator.pop(context); // Close the dialog
+                              
+                            },
+                            child: Text('Yes, Cancel'),
+                          ),
+                        ],
+                      );
+                    },
+                  );} , child: Text('Cancel Appointment',style: TextStyle(color: themeColor),)):SizedBox(),
+                ],
+              ),
+              // Add additional styling or actions as needed
+              // For example, you can add trailing icons for actions like cancel or update
             ),
-            // Add additional styling or actions as needed
-            // For example, you can add trailing icons for actions like cancel or update
           );
         }
       },
