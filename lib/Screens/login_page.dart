@@ -35,6 +35,7 @@ class _LoginPageState extends State<LoginPage> {
       email: email,
       password: password,
       isSalon: false,
+      context: context
       // profileImage: profileImage,
     );
 
