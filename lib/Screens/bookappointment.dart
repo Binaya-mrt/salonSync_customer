@@ -60,10 +60,9 @@ class AppointmentService {
   }
   Future<bool> isSlotAvailable(
       String salonId, DateTime selectedDate, int slotStartTime) async {
-        // log('olelele');
+        
            try {
-            log('olelele');
-      // int slotEndTime = slotStartTime + 1; // Assuming each slot is one hour
+      
       DateTime startTime = DateTime(
           selectedDate.year, selectedDate.month, selectedDate.day, slotStartTime);
       Timestamp startDateTime=Timestamp.fromDate(startTime);

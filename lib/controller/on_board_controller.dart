@@ -36,7 +36,7 @@ prefs.setBool('first_user', false);
 
   List<OnboardModel> onboard = <OnboardModel>[
     OnboardModel(
-      ('assets/images/3.jpg'),
+      ('assets/images/1.jpg'),
       ('Beard gives personality'),
       ('Get your beard fixed, get your personality'),
     ),
@@ -46,7 +46,7 @@ prefs.setBool('first_user', false);
       ('Get your hair a perfect treatement today'),
     ),
     OnboardModel(
-     ('assets/images/1.jpg'),
+     ('assets/images/3.jpg'),
       ('What a busy day?'),
       ('Throw away your tiredness with warm spa'),
     ),

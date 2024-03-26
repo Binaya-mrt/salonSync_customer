@@ -23,7 +23,7 @@ class _LoginPageState extends State<LoginPage> {
   final _formkey = GlobalKey<FormState>();
 
   final UtilityController _controller = Get.put(UtilityController());
-
+bool isObsecure=true;
   userLogin({
     required String email,
     required String password,
@@ -121,13 +121,15 @@ class _LoginPageState extends State<LoginPage> {
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
                       controller: _passwordController,
-                      obscureText: _controller.isObscure.value,
+                      obscureText:isObsecure,
                       decoration: InputDecoration(
                           suffixIcon: IconButton(
                             onPressed: () {
-                              _controller.toggleObscure();
+                             setState(() {
+                               isObsecure=!isObsecure;
+                             });
                             },
-                            icon: _controller.isObscure.value
+                            icon: isObsecure
                                 ? const Icon(Icons.visibility)
                                 : Icon(Icons.visibility_off),
                           ),
@@ -155,6 +157,7 @@ class _LoginPageState extends State<LoginPage> {
                           style: TextStyle(color: themeColor, fontSize: 22),
                         ),
                         onPressed: () {
+                         
                           if (_formkey.currentState!.validate()) {
                             userLogin(
                               context: context,

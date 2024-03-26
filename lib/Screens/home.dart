@@ -63,7 +63,7 @@ class _HomePageState extends State<HomePage> {
             // ),
             // _searchField(),
             SalonSearchWidget(),
-            _categoriesSection(),
+            // _categoriesSection(),
             _featuredBarbers(),
           ],
         ),
@@ -197,74 +197,74 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Column _categoriesSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          const Padding(
-            padding: EdgeInsets.only(left: 20, bottom: 10, top: 20),
-            child: Text(
-              'Category',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 22,
-                  fontWeight: FontWeight.w600),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 20, bottom: 10, top: 20, right: 10),
-            child: Text(
-              'View All',
-              style: TextStyle(
-                  color: themeColor, fontSize: 18, fontWeight: FontWeight.w200),
-            ),
-          ),
-        ]),
-        const SizedBox(
-          height: 10,
-        ),
-        Container(
-          height: 130,
-          child: ListView.separated(
-            itemCount: 6,
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.only(left: 20, right: 20),
-            separatorBuilder: (context, index) => const SizedBox(
-              width: 25,
-            ),
-            itemBuilder: (context, index) {
-              List<String> _services = [
-                'Barbar',
-                'Shaving',
-                'Haricut',
-                'Straight',
-                'Barbar',
-                'Shaving',
-                'Haricut',
-              ];
-              return Column(
-                children: [
-                  CircleAvatar(
-                    backgroundImage:
-                        AssetImage('assets/images/s${index + 1}.png'),
-                    radius: 40,
-                  ),
-                  Text(
-                    _services[index],
-                    style: const TextStyle(
-                        fontWeight: FontWeight.w400,
-                        color: Colors.white,
-                        fontSize: 17),
-                  ),
-                ],
-              );
-            },
-          ),
-        )
-      ],
-    );
-  }
+  // Column _categoriesSection() {
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+  //         const Padding(
+  //           padding: EdgeInsets.only(left: 20, bottom: 10, top: 20),
+  //           child: Text(
+  //             'Category',
+  //             style: TextStyle(
+  //                 color: Colors.white,
+  //                 fontSize: 22,
+  //                 fontWeight: FontWeight.w600),
+  //           ),
+  //         ),
+  //         Padding(
+  //           padding: EdgeInsets.only(left: 20, bottom: 10, top: 20, right: 10),
+  //           child: Text(
+  //             'View All',
+  //             style: TextStyle(
+  //                 color: themeColor, fontSize: 18, fontWeight: FontWeight.w200),
+  //           ),
+  //         ),
+  //       ]),
+  //       const SizedBox(
+  //         height: 10,
+  //       ),
+  //       Container(
+  //         height: 130,
+  //         child: ListView.separated(
+  //           itemCount: 6,
+  //           scrollDirection: Axis.horizontal,
+  //           padding: const EdgeInsets.only(left: 20, right: 20),
+  //           separatorBuilder: (context, index) => const SizedBox(
+  //             width: 25,
+  //           ),
+  //           itemBuilder: (context, index) {
+  //             List<String> _services = [
+  //               'Barbar',
+  //               'Shaving',
+  //               'Haricut',
+  //               'Straight',
+  //               'Barbar',
+  //               'Shaving',
+  //               'Haricut',
+  //             ];
+  //             return Column(
+  //               children: [
+  //                 CircleAvatar(
+  //                   backgroundImage:
+  //                       AssetImage('assets/images/s${index + 1}.png'),
+  //                   radius: 40,
+  //                 ),
+  //                 Text(
+  //                   _services[index],
+  //                   style: const TextStyle(
+  //                       fontWeight: FontWeight.w400,
+  //                       color: Colors.white,
+  //                       fontSize: 17),
+  //                 ),
+  //               ],
+  //             );
+  //           },
+  //         ),
+  //       )
+  //     ],
+  //   );
+  // }
 
   Column _featuredBarbers() {
     return Column(
@@ -485,15 +485,12 @@ class _SalonSearchWidgetState extends State<SalonSearchWidget> {
               title: Text(salon['salon_name']),
               subtitle: Text(salon['salon_address']),
               onTap: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) => SalonDetailPage(
-                //       salonName: salon['salon_name'],
-                //       salonUid: salon.id,
-                //     ),
-                //   ),
-                // );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SalonSetail(uid: salon['uid'], name: salon['salon_name'])
+                  ),
+                );
               },
             );
           },

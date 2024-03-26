@@ -23,6 +23,7 @@ class SalonSetail extends StatefulWidget {
   State<SalonSetail> createState() => _SalonSetailState();
 }
 
+
 int selectedIndex = -1;
 int bookedIndex = -1;
 String selected_service_name = '';
@@ -30,15 +31,25 @@ int selected_service_price = -1;
 int bookedSlot = -1;
 DateTime selectedDate = DateTime.now();
 
+
 DatePickerController _datePickerController = DatePickerController();
 
 var now = DateTime.now();
-DateTime startDate = now.subtract(Duration(days: 0));
+// DateTime startDate = now.subtract(Duration(days: 0));
 DateTime endDate = now.add(Duration(days: 5));
 
 AppointmentService _appointmentService = AppointmentService();
 
 class _SalonSetailState extends State<SalonSetail> {
+  @override
+void initState() {
+  selectedDate=DateTime.now();
+  bookedIndex=-1;
+  selectedIndex=-1;
+  bookedSlot=-1;
+    super.initState();
+   
+  }
 // required this.current_salon_index,required this.endTime,required this.startTime,required this.name
   @override
   Widget build(BuildContext context) {
@@ -86,303 +97,370 @@ class _SalonSetailState extends State<SalonSetail> {
 
                       String timing = getSalonTiming(doc['salon_start_time'],
                           doc['salon_ratingsalon_end_time']);
-                      return Padding(
-                        padding: EdgeInsets.only(left: 10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          // mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            kIsWeb
-                                ? ImageNetwork(
-                                    image: doc['salon_image'],
-                                    height: 300,
-                                    width: MediaQuery.of(context).size.width,
-                                    fitWeb: BoxFitWeb.cover,
-                                  )
-                                : Container(
-                                    decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                            image: NetworkImage(
-                                                doc['salon_image'])))),
-                            Text(
-                              doc['salon_name'],
-                              style: TextStyle(fontSize: 18),
-                            ),
-                            Text(
-                              doc['salon_address'],
-                              style: TextStyle(fontSize: 18),
-                            ),
-                            Text(
-                              doc['salon_phone'],
-                              style: TextStyle(fontSize: 18),
-                            ),
-                            Text(
-                              timing,
-                              style: TextStyle(fontSize: 18),
-                            ),
-                            Container(
-                              // color: Colors.red,
-                              height: 100,
-                              margin: EdgeInsets.only(left: 5),
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        // mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
 
-                              child: ListView.separated(
-                                  separatorBuilder: (context, index) =>
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                  shrinkWrap: true,
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: doc['Services'].length,
-                                  itemBuilder: (context, index) {
-                                    return Chip(
-                                        elevation: 10,
-                                        surfaceTintColor: Colors.red,
-                                        backgroundColor:
-                                            themeColor.withOpacity(0.4),
-                                        label: Text(
-                                            doc['Services'][index]
-                                                ['servicename'],
-                                            style:
-                                                const TextStyle(fontSize: 20)));
-                                  }),
+                          // ImageNetwork(
+                            
+                          //   image: doc['salon_image'],
+                          //   height: 300,
+                          //   width: MediaQuery.of(context).size.width,
+                          //   fitWeb: BoxFitWeb.cover,
+                          // ),
+                          Container(height: 300,decoration: BoxDecoration(image: DecorationImage(image: NetworkImage( doc['salon_image']),fit: BoxFit.cover)),),
+                          
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: ListTile(
+                              title: Text(
+                                doc['salon_name'],
+                                style: TextStyle(fontSize: 18),
+                              ),
+                              style: ListTileStyle.list,
+                              subtitle: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    doc['salon_address'],
+                                    style: TextStyle(fontSize: 18),
+                                  ),
+                                  Text(
+                                    timing,
+                                    style: TextStyle(fontSize: 18),
+                                  ),
+                                ],
+                              ),
+                              tileColor: themeColor.withOpacity(0.2),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20)),
+                            
                             ),
-                            Container(
-                              height: 100,
-                              child: ListView.separated(
-                                itemCount: doc['catalogues'].length,
-                                scrollDirection: Axis.horizontal,
-                                padding:
-                                    const EdgeInsets.only(left: 20, right: 20),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8, top: 10),
+                            child: Text(
+                              'Services Availabe',
+                              style: TextStyle(
+                                  color: themeColor,
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                          Container(
+                            // color: Colors.red,
+                            height: 100,
+                            margin: EdgeInsets.only(left: 5),
+
+                            child: ListView.separated(
                                 separatorBuilder: (context, index) =>
                                     const SizedBox(
-                                  width: 25,
-                                ),
-                                itemBuilder: (context, index) {
-                                  String formatServiceDuration(
-                                      int durationInMinutes) {
-                                    int hours = durationInMinutes ~/
-                                        60; // Integer division for full hours
-                                    int remainingMinutes = durationInMinutes %
-                                        60; // Remainder for remaining minutes
-
-                                    if (hours > 0) {
-                                      return '$hours hr ${remainingMinutes} min';
-                                    } else {
-                                      return '$durationInMinutes min';
-                                    }
-                                  }
-
-                                  String formatedDuration =
-                                      formatServiceDuration(int.parse(
-                                          doc['catalogues'][index]
-                                              ['duration']));
-
-                                  // int isSelected = doc['catalogues'][index];
-
-                                  return GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        selected_service_name =
-                                            doc['catalogues'][index]
-                                                ['servicename'];
-                                        selected_service_price =
-                                            doc['catalogues'][index]['price'];
-                                        selectedIndex = index;
-                                     
-
-                                      });
-                                    },
-                                    child: Container(
-                                      padding: EdgeInsets.all(8),
-                                      decoration: BoxDecoration(
-                                          color: index == selectedIndex
-                                              ? Colors.green.withOpacity(0.4)
-                                              : themeColor.withOpacity(0.4),
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Text(
-                                            doc['catalogues'][index]
-                                                ['servicename'],
-                                            style: const TextStyle(
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: 20),
-                                          ),
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceAround,
-                                            children: [
-                                              Icon(
-                                                Icons.price_check_rounded,
-                                                color: themeColor,
-                                              ),
-                                              Text(
-                                                "NPR ${doc['catalogues'][index]['price']}",
-                                                style: const TextStyle(
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 17),
-                                              ),
-                                            ],
-                                          ),
-                                          Row(
-                                            children: [
-                                              Icon(Icons.timelapse_rounded,
-                                                  color: themeColor),
-                                              Text(
-                                                formatedDuration,
-                                                style: const TextStyle(
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 17),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
+                                      width: 10,
                                     ),
-                                  );
-                                },
-                              ),
+                                shrinkWrap: true,
+                                scrollDirection: Axis.horizontal,
+                                itemCount: doc['Services'].length,
+                                itemBuilder: (context, index) {
+                                  return Chip(
+                                      elevation: 10,
+                                      surfaceTintColor: Colors.red,
+                                      backgroundColor:
+                                          themeColor.withOpacity(0.4),
+                                      label: Text(
+                                          doc['Services'][index]['servicename'],
+                                          style:
+                                              const TextStyle(fontSize: 20)));
+                                }),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8, top: 10),
+                            child: Text(
+                              'Catalogues',
+                              style: TextStyle(
+                                  color: themeColor,
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w600),
                             ),
-                            Container(
-                              color: Colors.grey,
-                              alignment: Alignment.center,
-                              child: HorizontalDatePickerWidget(
-                                selectedColor: themeColor.withOpacity(0.4),
-                                startDate: startDate,
-                                endDate: endDate,
-                                selectedDate: now,
-                                widgetWidth: MediaQuery.of(context).size.width,
-                                datePickerController: _datePickerController,
-                                onValueSelected: (date) {
-                                  selectedDate = date;
-                                },
+                          ),
+                          Container(
+                            height: 100,
+                            child: ListView.separated(
+                              itemCount: doc['catalogues'].length,
+                              scrollDirection: Axis.horizontal,
+                              padding:
+                                  const EdgeInsets.only(left: 20, right: 20),
+                              separatorBuilder: (context, index) =>
+                                  const SizedBox(
+                                width: 25,
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                left: 8,
-                              ),
-                              child: Text(
-                                'Available Slots',
-                                style: TextStyle(
-                                    color: themeColor,
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.w600),
-                              ),
-                            ),
-                            Container(
-                              height: 100,
-                              margin: EdgeInsets.only(left: 5),
-                              child: ListView.separated(
-                                  separatorBuilder: (context, index) =>
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                  shrinkWrap: true,
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: doc['all_available_slots'].length,
-                                  itemBuilder: (context, index) {
-                                    String convertToReadableTime(
-                                        Timestamp timestamp) {
-                                      DateTime dateTime = timestamp.toDate();
-                                      String formattedTime =
-                                          DateFormat.jm().format(dateTime);
-                                      return formattedTime;
-                                    }
+                              itemBuilder: (context, index) {
+                                String formatServiceDuration(
+                                    int durationInMinutes) {
+                                  int hours = durationInMinutes ~/
+                                      60; // Integer division for full hours
+                                  int remainingMinutes = durationInMinutes %
+                                      60; // Remainder for remaining minutes
 
-                                    String getSalonTiming(Timestamp startTime) {
-                                      String start =
-                                          convertToReadableTime(startTime);
-
-                                      return '$start ';
-                                    }
-
-                                    String start_time = getSalonTiming(
-                                        doc['all_available_slots'][index]
-                                            ['slot_start_time']);
-                                    return GestureDetector(
-                                      onTap: () async{
-                                        DateTime slot_start_hour = doc['all_available_slots'][index]
-                                                  ['slot_start_time'].toDate();
-                                                  int hour=slot_start_hour.hour;
-bool is_available=await _appointmentService.isSlotAvailable(doc['uid'],selectedDate,hour);
-is_available?null:Utils().showSnackBar(context,"Slot not Available");
-                        setState(() {
-                                   is_available?   {      
-                                          bookedSlot =
-                                          hour,
-                                          bookedIndex = index}
-                                          :null;
-                                        });
-                                        log(bookedSlot.toString());
-                                      },
-                                      child: Chip(
-                                          elevation: 10,
-                                          surfaceTintColor: Colors.red,
-                                          backgroundColor: index == bookedIndex
-                                              ? Colors.green.withOpacity(0.4)
-                                              : themeColor.withOpacity(0.4),
-                                          label: Text(start_time,
-                                              style: const TextStyle(
-                                                  fontSize: 20))),
-                                    );
-                                  }),
-                            ),
-                            Center(
-                              child: ElevatedButton(
-                                  onPressed: () async{
-                                     
-                                if(selected_service_price!=-1&& bookedSlot!=-1){      
-DateTime appointmentDatetime=DateTime(selectedDate.year,selectedDate.month,selectedDate.day,bookedSlot);
-                                    SharedPreferences _prefs= await SharedPreferences.getInstance();
- AppointmentModel appointment = AppointmentModel(customerId: _prefs.getString('uuid').toString(), salonId:doc['uid'] , serviceName: selected_service_name, price: selected_service_price, payment: false, status: 'Pending', appointmentDateTime: appointmentDatetime );
- log(appointment.toString());
-  _appointmentService.bookAppointment(appointment);
-  
-showDialog(
-  barrierDismissible: false,
-           context: context,
-           builder: (BuildContext context) {
-                    return Expanded(
-                      child:  AlertDialog(
-   
-              title: Text('Booking Successfull !'),           // To display the title it is optional
-              content: Text('You have booked your appointment for ${selected_service_name} on date ${appointmentDatetime} at ${doc['salon_name']} '),   // Message which will be pop up on the screen
-                                                  // Action widget which will provide the user to acknowledge the choice
-                actions: [
-                ElevatedButton(     
-                style: ElevatedButton.styleFrom(backgroundColor: themeColor),                // FlatButton widget is used to make a text to work like a 
-                  onPressed: () {
-  Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => DefaultPage(pageno: 0,)));
-
-                  },             // function used to perform after pressing the button
-                  child: Text('OK'),
-                ),
-               
-              ],
-            )
-          );
-       },
-  );
- 
-   
-                                }else{
-                                  Utils().showSnackBar(context, "Please choose a service from catalouge");
+                                  if (hours > 0) {
+                                    return '$hours hr ${remainingMinutes} min';
+                                  } else {
+                                    return '$durationInMinutes min';
+                                  }
                                 }
 
+                                String formatedDuration = formatServiceDuration(
+                                    int.parse(
+                                        doc['catalogues'][index]['duration']));
+
+                                // int isSelected = doc['catalogues'][index];
+
+                                return GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      selected_service_name==doc['catalogues']
+                                          [index]['servicename']?'':selected_service_name = doc['catalogues']
+                                          [index]['servicename'];
+                                      
+                                      selected_service_price ==
+                                          doc['catalogues'][index]['price']?-1: selected_service_price =
+                                          doc['catalogues'][index]['price'];
+                                      // selectedIndex ==-1? selectedIndex=index:selectedIndex =-1;
+                                      selectedIndex==index?selectedIndex=-1:selectedIndex=index;
+                                      log(selectedIndex.toString());
+                                    });
                                   },
-                                  child: const Text(
-                                    'Book Now',
-                                    style: TextStyle(
-                                        fontSize: 20, color: Colors.black),
-                                  )),
-                            )
-                          ],
-                        ),
+                                  child: Container(
+                                    padding: EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                        color: index == selectedIndex
+                                            ? Colors.green.withOpacity(0.4)
+                                            : themeColor.withOpacity(0.4),
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          doc['catalogues'][index]
+                                              ['servicename'],
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 20),
+                                        ),
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: [
+                                            Icon(
+                                              Icons.price_check_rounded,
+                                              color: themeColor,
+                                            ),
+                                            Text(
+                                              "NPR ${doc['catalogues'][index]['price']}",
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 17),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Icon(Icons.timelapse_rounded,
+                                                color: themeColor),
+                                            Text(
+                                              formatedDuration,
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 17),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8, top: 10),
+                            child: Text(
+                              'Choose date',
+                              style: TextStyle(
+                                  color: themeColor,
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(top: 20),
+                            color: Colors.grey,
+                            alignment: Alignment.center,
+                            child: HorizontalDatePickerWidget(
+                              selectedColor: themeColor.withOpacity(0.4),
+                              startDate: now,
+                              endDate: endDate,
+                              selectedDate: now,
+                              widgetWidth: MediaQuery.of(context).size.width,
+                              datePickerController: _datePickerController,
+                              onValueSelected: (date) {
+                                selectedDate = date;
+                              },
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8, top: 10),
+                            child: Text(
+                              'Available Slots',
+                              style: TextStyle(
+                                  color: themeColor,
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                          Container(
+                            height: 100,
+                            margin: EdgeInsets.only(left: 5),
+                            child: ListView.separated(
+                                separatorBuilder: (context, index) =>
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                shrinkWrap: true,
+                                scrollDirection: Axis.horizontal,
+                                itemCount: doc['all_available_slots'].length,
+                                itemBuilder: (context, index) {
+                                  String convertToReadableTime(
+                                      Timestamp timestamp) {
+                                    DateTime dateTime = timestamp.toDate();
+                                    String formattedTime =
+                                        DateFormat.jm().format(dateTime);
+                                    return formattedTime;
+                                  }
+
+                                  String getSalonTiming(Timestamp startTime) {
+                                    String start =
+                                        convertToReadableTime(startTime);
+
+                                    return '$start ';
+                                  }
+
+                                  String start_time = getSalonTiming(
+                                      doc['all_available_slots'][index]
+                                          ['slot_start_time']);
+                                  return GestureDetector(
+                                    onTap: () async {
+                                      DateTime slot_start_hour =
+                                          doc['all_available_slots'][index]
+                                                  ['slot_start_time']
+                                              .toDate();
+                                      int hour = slot_start_hour.hour;
+                                      log(hour.toString());
+                                      bool is_available =
+                                          await _appointmentService
+                                              .isSlotAvailable(doc['uid'],
+                                                  selectedDate, hour);
+                                      is_available
+                                          ? null
+                                          : Utils().showSnackBar(
+                                              context, "Slot not Available");
+                                      setState(() {
+                                        is_available
+                                            ? {
+                                                bookedSlot = hour,
+                                                bookedIndex = index
+                                              }
+                                            : null;
+                                      });
+                                      log(bookedSlot.toString());
+                                    },
+                                    child: Chip(
+                                        elevation: 10,
+                                        surfaceTintColor: Colors.red,
+                                        backgroundColor: index == bookedIndex
+                                            ? Colors.green.withOpacity(0.4)
+                                            : themeColor.withOpacity(0.4),
+                                        label: Text(start_time,
+                                            style:
+                                                const TextStyle(fontSize: 20))),
+                                  );
+                                }),
+                          ),
+                          Center(
+                            child: ElevatedButton(
+                                onPressed: () async {
+                                  if (selected_service_price != -1 &&
+                                      bookedSlot != -1 && bookedIndex!=-1) {
+                                    DateTime appointmentDatetime = DateTime(
+                                        selectedDate.year,
+                                        selectedDate.month,
+                                        selectedDate.day,
+                                        bookedSlot);
+                                    SharedPreferences _prefs =
+                                        await SharedPreferences.getInstance();
+                                    AppointmentModel appointment =
+                                        AppointmentModel(
+                                            customerId: _prefs
+                                                .getString('uuid')
+                                                .toString(),
+                                            salonId: doc['uid'],
+                                            serviceName: selected_service_name,
+                                            price: selected_service_price,
+                                            payment: false,
+                                            status: 'Pending',
+                                            appointmentDateTime:
+                                                appointmentDatetime);
+                                    log(appointment.toString());
+                                    _appointmentService
+                                        .bookAppointment(appointment);
+                                    showDialog(
+                                      barrierDismissible: false,
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return Expanded(
+                                            child: AlertDialog(
+                                          title: Text(
+                                              'Booking Successfull !'), // To display the title it is optional
+                                          content: Text(
+                                              'You have booked your appointment for ${selected_service_name} on date ${appointmentDatetime} at ${doc['salon_name']} '), // Message which will be pop up on the screen
+                                          // Action widget which will provide the user to acknowledge the choice
+                                          actions: [
+                                            ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                  backgroundColor:
+                                                      themeColor), // FlatButton widget is used to make a text to work like a
+                                              onPressed: () {
+                                                Navigator.pushReplacement(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (BuildContext
+                                                                context) =>
+                                                            DefaultPage(
+                                                              pageno: 0,
+                                                            )));
+                                              }, // function used to perform after pressing the button
+                                              child: Text('OK'),
+                                            ),
+                                          ],
+                                        ));
+                                      },
+                                    );
+                                  } else {
+                                    Utils().showSnackBar(context,
+                                        "Please choose a service from catalouge");
+                                  }
+                                },
+                                child: const Text(
+                                  'Book Now',
+                                  style: TextStyle(
+                                      fontSize: 20, color: Colors.black),
+                                )),
+                          )
+                        ],
                       );
                     }
                   } else if (snapshot.hasError) {

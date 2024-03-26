@@ -29,6 +29,7 @@ class _RegisterState extends State<Register> {
 
   final TextEditingController _phoneController = TextEditingController();
 
+bool isObsecure=true;
 
 
 userSignup({
@@ -204,12 +205,14 @@ Center(
                           padding: const EdgeInsets.all(8.0),
                           child: TextFormField(
                             controller: _passwordController,
-                            obscureText: _controller.isObscure.value,
+                            obscureText: isObsecure,
                            
                             decoration: InputDecoration(
                               suffixIcon: IconButton(onPressed:(){
-                                _controller.toggleObscure();
-                              },icon:  _controller.isObscure.value?const Icon(Icons.visibility):Icon(Icons.visibility_off),),
+                               setState(() {
+                               isObsecure=!isObsecure;
+                             });
+                              },icon: isObsecure?const Icon(Icons.visibility):Icon(Icons.visibility_off),),
                   
                                 hintText: 'Password',
                                 labelText: 'Password',

@@ -30,7 +30,7 @@ class UserAccount extends StatelessWidget {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('User ID: ${user.uid}',style: TextStyle(fontSize: 18),),
+                      Text('User Name: ${user.uid}',style: TextStyle(fontSize: 18),),
                       Text('Email: ${user.email}',style: TextStyle(fontSize: 24),),
                     ],
                   );
@@ -63,11 +63,11 @@ AppBar appBar(BuildContext context) {
       centerTitle: true,
       elevation: 0,
       backgroundColor: bgColor,
-      leading: Container(
-          margin: const EdgeInsets.all(14),
-          child: const CircleAvatar(
-            radius: 30,
-          )),
+      // leading: Container(
+      //     margin: const EdgeInsets.all(14),
+      //     child: const CircleAvatar(
+      //       radius: 30,
+      //     )),
       actions: [
         IconButton(
             onPressed: () {
@@ -150,11 +150,8 @@ class _PasswordUpdateFormState extends State<PasswordUpdateForm> {
             onPressed: ()async {
               if (_formKey.currentState!.validate()) {
                 
-                await FirebaseAuth.instance.currentUser?.updatePassword(_newPasswordController.text);
-                Utils().showSnackBar(context, "Password Changed Successfully");
-                _newPasswordController.clear();
-                _oldPasswordController.clear();
-
+               
+_updatePassword(_oldPasswordController.text,_newPasswordController.text);
               }
             },
             child: Text('Update Password',style: TextStyle(color: themeColor),),
@@ -163,6 +160,21 @@ class _PasswordUpdateFormState extends State<PasswordUpdateForm> {
       ),
     );
   }
+  void _updatePassword(String currentPassword, String newPassword) async {
+final user = FirebaseAuth.instance.currentUser;
+final cred = EmailAuthProvider.credential(
+    email: user!.email!, password: currentPassword);
+
+user.reauthenticateWithCredential(cred).then((value) {
+  user.updatePassword(newPassword).then((_) {
+     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Password updated successfully')));
+      }).catchError((error) {
+       
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error updating password: $error')));
+      });
+}).catchError((err) {
+ 
+});}
 
   @override
   void dispose() {
