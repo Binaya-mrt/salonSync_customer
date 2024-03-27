@@ -157,7 +157,6 @@ bool isObsecure=true;
                           style: TextStyle(color: themeColor, fontSize: 22),
                         ),
                         onPressed: () {
-                         
                           if (_formkey.currentState!.validate()) {
                             userLogin(
                               context: context,
