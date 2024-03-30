@@ -1,18 +1,22 @@
+// Dart imports:
 import 'dart:developer';
 
+// Flutter imports:
 import 'package:flutter/material.dart';
 
-// import 'package:flutter/material.dart';
+// Package imports:
 import 'package:form_field_validator/form_field_validator.dart';
-import 'package:get/get.dart';
-import 'package:salonsync/Screens/login_page.dart';
-// import 'package:flutter/foundation.dart';
+
+
+// Project imports:
 import 'package:salonsync/constants.dart';
 import 'package:salonsync/controller/Auth/Auth_method.dart';
-import 'package:salonsync/controller/utility_controller.dart';
+import 'package:salonsync/screens/login_page.dart';
+
+
 
 class Register extends StatefulWidget {
-  const Register({Key? key}) : super(key: key);
+  const Register({super.key});
 
   @override
   State<Register> createState() => _RegisterState();
@@ -29,10 +33,9 @@ class _RegisterState extends State<Register> {
 
   final TextEditingController _phoneController = TextEditingController();
 
-bool isObsecure=true;
+  bool isObsecure = true;
 
-
-userSignup({
+  userSignup({
     required String name,
     required String email,
     required String password,
@@ -41,8 +44,7 @@ userSignup({
     required BuildContext context,
     // required Uint8List profileImage,
   }) async {
-    print("called upper function");
-    _controller.isLoading.value = true;
+   
     String res = await AuthMethod().signUpUser(
       name: _nameController.text,
       email: _emailController.text,
@@ -68,59 +70,53 @@ userSignup({
         ),
       );
     }
-    _controller.isLoading.value = false;
+    // _controller.isLoading.value = false;
   }
-  final UtilityController _controller=Get.put(UtilityController());
+
+  // final UtilityController _controller = Get.put(UtilityController());
   final _formkey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-      title: const Text(
-        "Register",
-        style: TextStyle( fontSize: 30, fontFamily: 'Lato'),
-      ),
-      centerTitle: true,
-      elevation: 0,
-     
-     
-      ),
+          title: const Text(
+            "Register",
+            style: TextStyle(fontSize: 30, fontFamily: 'Lato'),
+          ),
+          centerTitle: true,
+          elevation: 0,
+        ),
         body: SingleChildScrollView(
           child: Column(
             children: [
-
-Center(
-              child: Container(
-                margin: EdgeInsets.only(top: 20),
-                height: MediaQuery.of(context).size.height*0.4,
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                  image: AssetImage(
-                    'assets/images/signup.png',
-                  ),
-                )),
+              Center(
+                child: Container(
+                  margin: const EdgeInsets.only(top: 20),
+                  height: MediaQuery.of(context).size.height * 0.4,
+                  decoration: const BoxDecoration(
+                      image: DecorationImage(
+                    image: AssetImage(
+                      'assets/images/signup.png',
+                    ),
+                  )),
+                ),
               ),
-            ),
-
               Padding(
-
                 padding: const EdgeInsets.all(12.0),
                 child: Form(
                     key: _formkey,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                       
                         Padding(
                           padding: const EdgeInsets.all(12.0),
                           child: TextFormField(
-                          controller: _nameController,
+                            controller: _nameController,
                             validator: MultiValidator([
                               RequiredValidator(errorText: 'Enter Full Name'),
                               MinLengthValidator(3,
                                   errorText: 'Minimum 3 charecter filled name'),
-                            ]),
-              
+                            ]).call,
                             decoration: InputDecoration(
                                 hintText: 'Enter Full Name',
                                 labelText: 'full name',
@@ -131,20 +127,19 @@ Center(
                                 errorStyle: const TextStyle(fontSize: 18.0),
                                 border: const OutlineInputBorder(
                                     borderSide: BorderSide(color: Colors.red),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(9.0)))),
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(9.0)))),
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(12.0),
                           child: TextFormField(
-                          controller: _address,
+                            controller: _address,
                             validator: MultiValidator([
                               RequiredValidator(errorText: 'Address'),
                               MinLengthValidator(3,
                                   errorText: 'Minimum 3 charecter filled name'),
-                            ]),
-              
+                            ]).call,
                             decoration: InputDecoration(
                                 hintText: 'Address',
                                 labelText: 'Address',
@@ -155,20 +150,20 @@ Center(
                                 errorStyle: const TextStyle(fontSize: 18.0),
                                 border: const OutlineInputBorder(
                                     borderSide: BorderSide(color: Colors.red),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(9.0)))),
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(9.0)))),
                           ),
                         ),
-                       
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: TextFormField(
                             controller: _emailController,
                             validator: MultiValidator([
-                              RequiredValidator(errorText: 'Enter email address'),
+                              RequiredValidator(
+                                  errorText: 'Enter email address'),
                               EmailValidator(
                                   errorText: 'Please correct email filled'),
-                            ]),
+                            ]).call,
                             decoration: InputDecoration(
                                 hintText: 'Email',
                                 labelText: 'Email',
@@ -179,15 +174,14 @@ Center(
                                 errorStyle: const TextStyle(fontSize: 18.0),
                                 border: const OutlineInputBorder(
                                     borderSide: BorderSide(color: Colors.red),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(9.0)))),
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(9.0)))),
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: TextFormField(
                             controller: _phoneController,
-                          
                             decoration: InputDecoration(
                                 hintText: 'Mobile',
                                 labelText: 'Mobile',
@@ -206,14 +200,17 @@ Center(
                           child: TextFormField(
                             controller: _passwordController,
                             obscureText: isObsecure,
-                           
                             decoration: InputDecoration(
-                              suffixIcon: IconButton(onPressed:(){
-                               setState(() {
-                               isObsecure=!isObsecure;
-                             });
-                              },icon: isObsecure?const Icon(Icons.visibility):Icon(Icons.visibility_off),),
-                  
+                                suffixIcon: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      isObsecure = !isObsecure;
+                                    });
+                                  },
+                                  icon: isObsecure
+                                      ? const Icon(Icons.visibility)
+                                      : const Icon(Icons.visibility_off),
+                                ),
                                 hintText: 'Password',
                                 labelText: 'Password',
                                 prefixIcon: Icon(
@@ -230,40 +227,42 @@ Center(
                             child: Padding(
                           padding: const EdgeInsets.all(18.0),
                           child: SizedBox(
-                          
                             width: MediaQuery.of(context).size.width,
-              
                             height: 50,
-                            
                             child: ElevatedButton(
                               child: Text(
                                 'Register',
-                                style: TextStyle(color: themeColor, fontSize: 22),
+                                style:
+                                    TextStyle(color: themeColor, fontSize: 22),
                               ),
                               onPressed: () {
                                 if (_formkey.currentState!.validate()) {
-                                  userSignup(address:_address.text,context: context,email: _emailController.text,name:_nameController.text ,password: _passwordController.text,phone: _phoneController.text );
-                                                    
+                                  userSignup(
+                                      address: _address.text,
+                                      context: context,
+                                      email: _emailController.text,
+                                      name: _nameController.text,
+                                      password: _passwordController.text,
+                                      phone: _phoneController.text);
                                 }
                               },
                             ),
                           ),
                         )),
                         Center(
-                    child: TextButton(
-
-                      child: Text('Already have an Account, Login up',style: TextStyle(fontSize: 18),),
-                      onPressed: () {
-
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => LoginPage()));
-                      },
-                    ),
-                  )
-                          
-                      
+                          child: TextButton(
+                            child: const Text(
+                              'Already have an Account, Login up',
+                              style: TextStyle(fontSize: 18),
+                            ),
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const LoginPage()));
+                            },
+                          ),
+                        )
                       ],
                     )),
               ),

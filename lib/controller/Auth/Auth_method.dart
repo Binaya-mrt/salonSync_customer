@@ -1,14 +1,19 @@
+// Dart imports:
 import 'dart:developer';
 import 'dart:io';
 
+// Flutter imports:
+import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:salonsync/Screens/login_page.dart';
-import 'package:salonsync/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../models/User_model.dart';
+// Project imports:
+import 'package:salonsync/constants.dart';
+import 'package:salonsync/screens/login_page.dart';
+import 'package:salonsync/models/user_model.dart';
 
 class AuthMethod {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -22,13 +27,13 @@ class AuthMethod {
         context,
         PageRouteBuilder(pageBuilder: (BuildContext context,
             Animation animation, Animation secondaryAnimation) {
-          return LoginPage();
+          return const LoginPage();
         }, transitionsBuilder: (BuildContext context,
             Animation<double> animation,
             Animation<double> secondaryAnimation,
             Widget child) {
-          return new SlideTransition(
-            position: new Tween<Offset>(
+          return SlideTransition(
+            position: Tween<Offset>(
               begin: const Offset(1.0, 0.0),
               end: Offset.zero,
             ).animate(animation),

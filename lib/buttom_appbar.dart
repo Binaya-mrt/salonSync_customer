@@ -1,17 +1,18 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:salonsync/Screens/home.dart';
-import 'package:salonsync/Screens/user_account.dart';
-import 'package:salonsync/Screens/user_appointments.dart';
+
+// Project imports:
 import 'package:salonsync/constants.dart';
-
-
+import 'package:salonsync/screens/home.dart';
+import 'package:salonsync/screens/user_account.dart';
+import 'package:salonsync/screens/user_appointments.dart';
 
 /// This is a page that contains a buttom app bar.
 /// It have four icons that navigates to four different screens.
 ///
 
 class DefaultPage extends StatefulWidget {
-  const DefaultPage({required this.pageno});
+  const DefaultPage({super.key, required this.pageno});
   final int pageno;
 
   @override
@@ -37,9 +38,8 @@ class _DefaultPageState extends State<DefaultPage> {
 
   final screens = [
     const HomePage(),
-     Appointment(),
-    
-     UserAccount(),
+    const Appointment(),
+    const UserAccount(),
   ];
 
   @override
@@ -63,7 +63,6 @@ class _DefaultPageState extends State<DefaultPage> {
             label: "home",
             icon: Icon(Icons.home),
           ),
-          
           BottomNavigationBarItem(
             label: 'Appointment',
             icon: Icon(Icons.calendar_month_outlined),
@@ -74,7 +73,7 @@ class _DefaultPageState extends State<DefaultPage> {
           ),
         ],
       ),
-      body: IndexedStack(children: screens, index: currnetIndex),
+      body: IndexedStack(index: currnetIndex, children: screens),
     );
   }
 }

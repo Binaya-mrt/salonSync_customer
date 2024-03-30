@@ -1,15 +1,16 @@
+// Dart imports:
 import 'dart:developer';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:provider/provider.dart';
-import 'package:salonsync/Screens/Notification.dart';
-import 'package:salonsync/Screens/shop_details.dart';
-import 'package:salonsync/constants.dart';
+
+// Package imports:
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:salonsync/controller/Auth/Fetch_Appointments.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+// Project imports:
+import 'package:salonsync/constants.dart';
+import 'package:salonsync/screens/shop_details.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -24,7 +25,7 @@ class _HomePageState extends State<HomePage> {
     //  var _salons = Provider.of<ListProvider>(context, listen: false);
     // _salons.getSalons(context);
 
-    final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+    final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
     List<String> list = [
       'assets/images/pp1.jpg',
@@ -32,15 +33,14 @@ class _HomePageState extends State<HomePage> {
       'assets/images/pp3.jpg'
     ];
     return Scaffold(
-      key: _scaffoldKey,
+      key: scaffoldKey,
       resizeToAvoidBottomInset: false,
-      appBar: appBar(context, _scaffoldKey),
+      appBar: appBar(context, scaffoldKey),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Container(
-                child: CarouselSlider(
+            CarouselSlider(
               options: CarouselOptions(
                 autoPlay: true,
               ),
@@ -56,35 +56,35 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ))
                   .toList(),
-            )),
+            ),
 
             // Container(
 
             // ),
             // _searchField(),
-            SalonSearchWidget(),
+            const SalonSearchWidget(),
             // _categoriesSection(),
             _featuredBarbers(),
           ],
         ),
       ),
       backgroundColor: bgColor,
-      endDrawer: Drawer(
+      endDrawer: const Drawer(
         child: SafeArea(
           child: Column(
             children: [
-              const DrawerHeader(
+              DrawerHeader(
                 child: Text('Notifications'),
               ),
               ListTile(
-                title: const Text('Your appointment is confirmed!'),
+                title: Text('Your appointment is confirmed!'),
                 subtitle: Text(
                   'Your hair appointment for tomorrow at 10:00 AM is confirmed.',
                 ),
               ),
-              const Divider(),
+              Divider(),
               ListTile(
-                title: const Text('Appointment reminder'),
+                title: Text('Appointment reminder'),
                 subtitle: Text(
                   'Don\'t forget your upcoming massage appointment on Friday at 5:00 PM.',
                 ),
@@ -129,7 +129,7 @@ class _HomePageState extends State<HomePage> {
               //   MaterialPageRoute(
               //       builder: (context) => const NotificationPage()),
               // );
-              Drawer();
+              const Drawer();
             },
             icon: const Icon(
               Icons.notification_add_rounded,
@@ -152,7 +152,7 @@ class _HomePageState extends State<HomePage> {
       child: TextField(
         decoration: InputDecoration(
             filled: true,
-            fillColor: Color(0xff364155),
+            fillColor: const Color(0xff364155),
             contentPadding: const EdgeInsets.all(15),
             hintText: 'Search Services',
             hintStyle: const TextStyle(color: Color(0xffDDDADA), fontSize: 14),
@@ -160,12 +160,12 @@ class _HomePageState extends State<HomePage> {
               padding: const EdgeInsets.all(12),
               child: IconButton(
                   onPressed: () {},
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.search,
                     color: Colors.white,
                   )),
             ),
-            suffixIcon: Container(
+            suffixIcon: SizedBox(
               width: 100,
               child: IntrinsicHeight(
                 child: Row(
@@ -282,12 +282,15 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(left: 20, bottom: 10, top: 20, right: 10),
-            child: Text(
-              'View All',
+            padding:
+                const EdgeInsets.only(left: 20, bottom: 10, top: 20, right: 10),
+            child: TextButton(
+              onPressed: (){},
+
+              child:Text('View All',
               style: TextStyle(
                   color: themeColor, fontSize: 18, fontWeight: FontWeight.w200),
-            ),
+            ),),
           ),
         ]),
         const SizedBox(
@@ -299,7 +302,7 @@ class _HomePageState extends State<HomePage> {
             if (snapshot.hasData) {
               final List<DocumentSnapshot> documents = snapshot.data!.docs;
 
-              return Container(
+              return SizedBox(
                 height: 280,
                 // color:Colors.red,
                 child: ListView.separated(
@@ -314,7 +317,7 @@ class _HomePageState extends State<HomePage> {
                       for (var doc in documents) {
                         return GestureDetector(
                           onTap: () {
-                            log('Tapped');
+                            
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -324,6 +327,7 @@ class _HomePageState extends State<HomePage> {
                                         )));
                           },
                           child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 15),
                               height: 280,
                               width: 200,
                               decoration: BoxDecoration(
@@ -343,47 +347,31 @@ class _HomePageState extends State<HomePage> {
                                         borderRadius: BorderRadius.circular(16),
                                       ),
                                     ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        Text(
-                                          doc['salon_name'],
-                                          style: pstyle,
-                                        ),
-                                        Text(
-                                          '4.5',
-                                          style: pstyle,
-                                        )
-                                      ],
+                                    Text(
+                                      doc['salon_name'],
+                                      style: pstyle,
                                     ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        Text(
-                                          doc['salon_address'],
-                                          style: pstyle,
-                                        ),
-                                        Text(
-                                          '4.5 KM',
-                                          style: pstyle,
-                                        )
-                                      ],
+                                    Text(
+                                      doc['salon_address'],
+                                      style: pstyle,
+                                    ),
+                                    Text(
+                                      doc['salon_phone'],
+                                      style: pstyle,
                                     ),
                                     Padding(
                                       padding:
                                           const EdgeInsets.only(left: 10.0),
                                       child: ElevatedButton(
                                         onPressed: () {
-                                          // Your button action here
+                                         Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SalonSetail(
+                                          uid: doc['uid'],
+                                          name: doc['salon_name'],
+                                        )));
                                         },
-                                        child: Text(
-                                          'See Details',
-                                          style: TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.white),
-                                        ),
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor: themeColor,
                                           shape: RoundedRectangleBorder(
@@ -391,17 +379,24 @@ class _HomePageState extends State<HomePage> {
                                                 10.0), // Adjust as desired
                                           ),
                                         ),
+                                        child: const Text(
+                                          'See Details',
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.white),
+                                        ),
                                       ),
                                     ),
                                   ])),
                         );
                       }
+                      return null;
                     }),
               );
             } else if (snapshot.hasError) {
-              return Text("Hello");
+              return const Divider();
             }
-            return Divider();
+            return const Divider();
           },
         )
       ],
@@ -411,8 +406,10 @@ class _HomePageState extends State<HomePage> {
 // salon['salon_name']
 
 class SalonSearchWidget extends StatefulWidget {
+  const SalonSearchWidget({super.key});
+
   @override
-  _SalonSearchWidgetState createState() => _SalonSearchWidgetState();
+  State<SalonSearchWidget> createState() => _SalonSearchWidgetState();
 }
 
 class _SalonSearchWidgetState extends State<SalonSearchWidget> {
@@ -440,16 +437,16 @@ class _SalonSearchWidgetState extends State<SalonSearchWidget> {
         _searchResults.clear();
       } else {
         _searchResults = _salons
-             .where((salon) =>
-              salon['salon_name']
-                  .toString()
-                  .toLowerCase()
-                  .contains(query.toLowerCase()) ||
-              salon['salon_address']
-                  .toString()
-                  .toLowerCase()
-                  .contains(query.toLowerCase()))
-          .toList();
+            .where((salon) =>
+                salon['salon_name']
+                    .toString()
+                    .toLowerCase()
+                    .contains(query.toLowerCase()) ||
+                salon['salon_address']
+                    .toString()
+                    .toLowerCase()
+                    .contains(query.toLowerCase()))
+            .toList();
       }
     });
   }
@@ -462,18 +459,18 @@ class _SalonSearchWidgetState extends State<SalonSearchWidget> {
         TextField(
           controller: _searchController,
           onChanged: _searchSalons,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
               focusColor: Colors.white,
               filled: true,
               fillColor: Colors.white,
               hintText: 'Search Salons',
               contentPadding: EdgeInsets.all(10),
               hintStyle: TextStyle(color: Colors.black),
-              border: const OutlineInputBorder(
+              border: OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.red),
                   borderRadius: BorderRadius.all(Radius.circular(9.0)))),
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         ListView.builder(
           shrinkWrap: true,
           itemCount: _searchResults.length,
@@ -481,15 +478,14 @@ class _SalonSearchWidgetState extends State<SalonSearchWidget> {
             final salon = _searchResults[index];
             return ListTile(
               tileColor: Colors.white,
-              
               title: Text(salon['salon_name']),
               subtitle: Text(salon['salon_address']),
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => SalonSetail(uid: salon['uid'], name: salon['salon_name'])
-                  ),
+                      builder: (context) => SalonSetail(
+                          uid: salon['uid'], name: salon['salon_name'])),
                 );
               },
             );

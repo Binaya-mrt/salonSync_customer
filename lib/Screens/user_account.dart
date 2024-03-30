@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:salonsync/Screens/notification.dart';
+import 'package:salonsync/screens/notification.dart';
 import 'package:salonsync/constants.dart';
 import 'package:salonsync/controller/Auth/Auth_method.dart';
-import 'package:salonsync/controller/preferences_controller.dart';
 
 class UserAccount extends StatelessWidget {
+  const UserAccount({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:appBar(context),
+      appBar: appBar(context),
       body: Padding(
-        padding: EdgeInsets.only(top:20,left: 10),
+        padding: const EdgeInsets.only(top: 20, left: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -20,33 +21,42 @@ class UserAccount extends StatelessWidget {
               future: FirebaseAuth.instance.authStateChanges().first,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
+                  return const CircularProgressIndicator();
                 } else if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 } else if (snapshot.data == null) {
-                  return Text('User not signed in');
+                  return const Text('User not signed in');
                 } else {
                   final user = snapshot.data!;
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('User Name: ${user.uid}',style: TextStyle(fontSize: 18),),
-                      Text('Email: ${user.email}',style: TextStyle(fontSize: 24),),
+                      Text(
+                        'User Name: ${user.uid}',
+                        style: const TextStyle(fontSize: 18),
+                      ),
+                      Text(
+                        'Email: ${user.email}',
+                        style: const TextStyle(fontSize: 24),
+                      ),
                     ],
                   );
                 }
               },
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             // Form to update password
-            PasswordUpdateForm(),
-            SizedBox(height: 20),
+            const PasswordUpdateForm(),
+            const SizedBox(height: 20),
             // Logout button
             ElevatedButton(
               onPressed: () async {
-               AuthMethod().logout(context);
+                AuthMethod().logout(context);
               },
-              child: Text('Logout',style: TextStyle(color: themeColor),),
+              child: Text(
+                'Logout',
+                style: TextStyle(color: themeColor),
+              ),
             ),
           ],
         ),
@@ -54,7 +64,7 @@ class UserAccount extends StatelessWidget {
     );
   }
 
-AppBar appBar(BuildContext context) {
+  AppBar appBar(BuildContext context) {
     return AppBar(
       title: const Text(
         "SalonSync",
@@ -85,24 +95,24 @@ AppBar appBar(BuildContext context) {
       ],
     );
   }
-
 }
 
 class PasswordUpdateForm extends StatefulWidget {
+  const PasswordUpdateForm({super.key});
+
   @override
-  _PasswordUpdateFormState createState() => _PasswordUpdateFormState();
+  State<PasswordUpdateForm> createState() => _PasswordUpdateFormState();
 }
 
 class _PasswordUpdateFormState extends State<PasswordUpdateForm> {
   final _formKey = GlobalKey<FormState>();
   final _oldPasswordController = TextEditingController();
   final _newPasswordController = TextEditingController();
-  bool showPassword=false;
-  
-   void changeShowPassword(showPass){
+  bool showPassword = false;
+
+  void changeShowPassword(showPass) {
     setState(() {
-      
-   showPassword=showPass;
+      showPassword = showPass;
     });
   }
 
@@ -116,13 +126,17 @@ class _PasswordUpdateFormState extends State<PasswordUpdateForm> {
           Center(
             child: Text(
               'Update Password',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold,color: themeColor,),
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: themeColor,
+              ),
             ),
           ),
           TextFormField(
             controller: _oldPasswordController,
             obscureText: !showPassword,
-            decoration: InputDecoration(labelText: 'Old Password'),
+            decoration: const InputDecoration(labelText: 'Old Password'),
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please enter your old password';
@@ -133,8 +147,7 @@ class _PasswordUpdateFormState extends State<PasswordUpdateForm> {
           TextFormField(
             controller: _newPasswordController,
             obscureText: !showPassword,
-
-            decoration: InputDecoration(labelText: 'New Password'),
+            decoration: const InputDecoration(labelText: 'New Password'),
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please enter a new password';
@@ -142,39 +155,46 @@ class _PasswordUpdateFormState extends State<PasswordUpdateForm> {
               return null;
             },
           ),
-          
-          CheckboxListTile(value: showPassword, onChanged:changeShowPassword,title: Text('Show Password'),controlAffinity: ListTileControlAffinity.leading,),
-          SizedBox(height: 10),
+          CheckboxListTile(
+            value: showPassword,
+            onChanged: changeShowPassword,
+            title: const Text('Show Password'),
+            controlAffinity: ListTileControlAffinity.leading,
+          ),
+          const SizedBox(height: 10),
           ElevatedButton(
             // style: ElevatedButton.styleFrom/,
-            onPressed: ()async {
+            onPressed: () async {
               if (_formKey.currentState!.validate()) {
-                
-               
-_updatePassword(_oldPasswordController.text,_newPasswordController.text);
+                _updatePassword(
+                    _oldPasswordController.text, _newPasswordController.text);
               }
             },
-            child: Text('Update Password',style: TextStyle(color: themeColor),),
+            child: Text(
+              'Update Password',
+              style: TextStyle(color: themeColor),
+            ),
           ),
         ],
       ),
     );
   }
-  void _updatePassword(String currentPassword, String newPassword) async {
-final user = FirebaseAuth.instance.currentUser;
-final cred = EmailAuthProvider.credential(
-    email: user!.email!, password: currentPassword);
 
-user.reauthenticateWithCredential(cred).then((value) {
-  user.updatePassword(newPassword).then((_) {
-     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Password updated successfully')));
+  void _updatePassword(String currentPassword, String newPassword) async {
+    final user = FirebaseAuth.instance.currentUser;
+    final cred = EmailAuthProvider.credential(
+        email: user!.email!, password: currentPassword);
+
+    user.reauthenticateWithCredential(cred).then((value) {
+      user.updatePassword(newPassword).then((_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Password updated successfully')));
       }).catchError((error) {
-       
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error updating password: $error')));
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Error updating password: $error')));
       });
-}).catchError((err) {
- 
-});}
+    }).catchError((err) {});
+  }
 
   @override
   void dispose() {

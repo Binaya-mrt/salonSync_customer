@@ -1,28 +1,29 @@
+// Dart imports:
 import 'dart:developer';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
 
-import 'package:image_network/image_network.dart';
-import 'package:salonsync/Screens/bookappointment.dart';
-import 'package:salonsync/buttom_appbar.dart';
-import 'package:salonsync/constants.dart';
-import 'package:intl/intl.dart';
-
+// Package imports:
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:horizontal_center_date_picker/datepicker_controller.dart';
 import 'package:horizontal_center_date_picker/horizontal_date_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+// Project imports:
+import 'package:salonsync/buttom_appbar.dart';
+import 'package:salonsync/constants.dart';
+import 'package:salonsync/screens/bookappointment.dart';
 
 class SalonSetail extends StatefulWidget {
   final String uid;
   final String name;
-  SalonSetail({super.key, required this.uid, required this.name});
+  const SalonSetail({super.key, required this.uid, required this.name});
 
   @override
   State<SalonSetail> createState() => _SalonSetailState();
 }
-
 
 int selectedIndex = -1;
 int bookedIndex = -1;
@@ -31,25 +32,24 @@ int selected_service_price = -1;
 int bookedSlot = -1;
 DateTime selectedDate = DateTime.now();
 
-
 DatePickerController _datePickerController = DatePickerController();
+// Yo date time wala function haru 2-3 oota xa yar. k garyeko idk but chalirako xa 
 
 var now = DateTime.now();
 // DateTime startDate = now.subtract(Duration(days: 0));
-DateTime endDate = now.add(Duration(days: 5));
-
+DateTime endDate = now.add(const Duration(days: 5));
 AppointmentService _appointmentService = AppointmentService();
 
 class _SalonSetailState extends State<SalonSetail> {
   @override
-void initState() {
-  selectedDate=DateTime.now();
-  bookedIndex=-1;
-  selectedIndex=-1;
-  bookedSlot=-1;
+  void initState() {
+    selectedDate = DateTime.now();
+    bookedIndex = -1;
+    selectedIndex = -1;
+    bookedSlot = -1;
     super.initState();
-   
   }
+
 // required this.current_salon_index,required this.endTime,required this.startTime,required this.name
   @override
   Widget build(BuildContext context) {
@@ -101,22 +101,27 @@ void initState() {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         // mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-
                           // ImageNetwork(
-                            
+
                           //   image: doc['salon_image'],
                           //   height: 300,
                           //   width: MediaQuery.of(context).size.width,
                           //   fitWeb: BoxFitWeb.cover,
                           // ),
-                          Container(height: 300,decoration: BoxDecoration(image: DecorationImage(image: NetworkImage( doc['salon_image']),fit: BoxFit.cover)),),
-                          
+                          Container(
+                            height: 300,
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    image: NetworkImage(doc['salon_image']),
+                                    fit: BoxFit.cover)),
+                          ),
+
                           Padding(
                             padding: const EdgeInsets.only(top: 8.0),
                             child: ListTile(
                               title: Text(
                                 doc['salon_name'],
-                                style: TextStyle(fontSize: 18),
+                                style: const TextStyle(fontSize: 18),
                               ),
                               style: ListTileStyle.list,
                               subtitle: Column(
@@ -125,18 +130,17 @@ void initState() {
                                 children: [
                                   Text(
                                     doc['salon_address'],
-                                    style: TextStyle(fontSize: 18),
+                                    style: const TextStyle(fontSize: 18),
                                   ),
                                   Text(
                                     timing,
-                                    style: TextStyle(fontSize: 18),
+                                    style: const TextStyle(fontSize: 18),
                                   ),
                                 ],
                               ),
                               tileColor: themeColor.withOpacity(0.2),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(20)),
-                            
                             ),
                           ),
                           Padding(
@@ -152,7 +156,7 @@ void initState() {
                           Container(
                             // color: Colors.red,
                             height: 100,
-                            margin: EdgeInsets.only(left: 5),
+                            margin: const EdgeInsets.only(left: 5),
 
                             child: ListView.separated(
                                 separatorBuilder: (context, index) =>
@@ -184,7 +188,7 @@ void initState() {
                                   fontWeight: FontWeight.w600),
                             ),
                           ),
-                          Container(
+                          SizedBox(
                             height: 100,
                             child: ListView.separated(
                               itemCount: doc['catalogues'].length,
@@ -204,7 +208,7 @@ void initState() {
                                       60; // Remainder for remaining minutes
 
                                   if (hours > 0) {
-                                    return '$hours hr ${remainingMinutes} min';
+                                    return '$hours hr $remainingMinutes min';
                                   } else {
                                     return '$durationInMinutes min';
                                   }
@@ -219,20 +223,28 @@ void initState() {
                                 return GestureDetector(
                                   onTap: () {
                                     setState(() {
-                                      selected_service_name==doc['catalogues']
-                                          [index]['servicename']?'':selected_service_name = doc['catalogues']
-                                          [index]['servicename'];
-                                      
+                                      selected_service_name ==
+                                              doc['catalogues'][index]
+                                                  ['servicename']
+                                          ? ''
+                                          : selected_service_name =
+                                              doc['catalogues'][index]
+                                                  ['servicename'];
+
                                       selected_service_price ==
-                                          doc['catalogues'][index]['price']?-1: selected_service_price =
-                                          doc['catalogues'][index]['price'];
+                                              doc['catalogues'][index]['price']
+                                          ? -1
+                                          : selected_service_price =
+                                              doc['catalogues'][index]['price'];
                                       // selectedIndex ==-1? selectedIndex=index:selectedIndex =-1;
-                                      selectedIndex==index?selectedIndex=-1:selectedIndex=index;
+                                      selectedIndex == index
+                                          ? selectedIndex = -1
+                                          : selectedIndex = index;
                                       log(selectedIndex.toString());
                                     });
                                   },
                                   child: Container(
-                                    padding: EdgeInsets.all(8),
+                                    padding: const EdgeInsets.all(8),
                                     decoration: BoxDecoration(
                                         color: index == selectedIndex
                                             ? Colors.green.withOpacity(0.4)
@@ -297,7 +309,7 @@ void initState() {
                             ),
                           ),
                           Container(
-                            margin: EdgeInsets.only(top: 20),
+                            margin: const EdgeInsets.only(top: 20),
                             color: Colors.grey,
                             alignment: Alignment.center,
                             child: HorizontalDatePickerWidget(
@@ -324,7 +336,7 @@ void initState() {
                           ),
                           Container(
                             height: 100,
-                            margin: EdgeInsets.only(left: 5),
+                            margin: const EdgeInsets.only(left: 5),
                             child: ListView.separated(
                                 separatorBuilder: (context, index) =>
                                     const SizedBox(
@@ -349,27 +361,27 @@ void initState() {
                                     return '$start ';
                                   }
 
-                                  String start_time = getSalonTiming(
+                                  String startTime = getSalonTiming(
                                       doc['all_available_slots'][index]
                                           ['slot_start_time']);
                                   return GestureDetector(
                                     onTap: () async {
-                                      DateTime slot_start_hour =
+                                      DateTime slotStartHour =
                                           doc['all_available_slots'][index]
                                                   ['slot_start_time']
                                               .toDate();
-                                      int hour = slot_start_hour.hour;
+                                      int hour = slotStartHour.hour;
                                       log(hour.toString());
-                                      bool is_available =
+                                      bool isAvailable =
                                           await _appointmentService
                                               .isSlotAvailable(doc['uid'],
                                                   selectedDate, hour);
-                                      is_available
+                                      isAvailable
                                           ? null
                                           : Utils().showSnackBar(
                                               context, "Slot not Available");
                                       setState(() {
-                                        is_available
+                                        isAvailable
                                             ? {
                                                 bookedSlot = hour,
                                                 bookedIndex = index
@@ -384,7 +396,7 @@ void initState() {
                                         backgroundColor: index == bookedIndex
                                             ? Colors.green.withOpacity(0.4)
                                             : themeColor.withOpacity(0.4),
-                                        label: Text(start_time,
+                                        label: Text(startTime,
                                             style:
                                                 const TextStyle(fontSize: 20))),
                                   );
@@ -394,17 +406,18 @@ void initState() {
                             child: ElevatedButton(
                                 onPressed: () async {
                                   if (selected_service_price != -1 &&
-                                      bookedSlot != -1 && bookedIndex!=-1) {
+                                      bookedSlot != -1 &&
+                                      bookedIndex != -1) {
                                     DateTime appointmentDatetime = DateTime(
                                         selectedDate.year,
                                         selectedDate.month,
                                         selectedDate.day,
                                         bookedSlot);
-                                    SharedPreferences _prefs =
+                                    SharedPreferences prefs =
                                         await SharedPreferences.getInstance();
                                     AppointmentModel appointment =
                                         AppointmentModel(
-                                            customerId: _prefs
+                                            customerId: prefs
                                                 .getString('uuid')
                                                 .toString(),
                                             salonId: doc['uid'],
@@ -423,10 +436,10 @@ void initState() {
                                       builder: (BuildContext context) {
                                         return Expanded(
                                             child: AlertDialog(
-                                          title: Text(
+                                          title: const Text(
                                               'Booking Successfull !'), // To display the title it is optional
                                           content: Text(
-                                              'You have booked your appointment for ${selected_service_name} on date ${appointmentDatetime} at ${doc['salon_name']} '), // Message which will be pop up on the screen
+                                              'You have booked your appointment for $selected_service_name on date $appointmentDatetime at ${doc['salon_name']} '), // Message which will be pop up on the screen
                                           // Action widget which will provide the user to acknowledge the choice
                                           actions: [
                                             ElevatedButton(
@@ -439,11 +452,11 @@ void initState() {
                                                     MaterialPageRoute(
                                                         builder: (BuildContext
                                                                 context) =>
-                                                            DefaultPage(
+                                                            const DefaultPage(
                                                               pageno: 0,
                                                             )));
                                               }, // function used to perform after pressing the button
-                                              child: Text('OK'),
+                                              child: const Text('OK'),
                                             ),
                                           ],
                                         ));
@@ -464,16 +477,16 @@ void initState() {
                       );
                     }
                   } else if (snapshot.hasError) {
-                    return Text("Hello");
+                    return const Text("Hello");
                   }
 
-                  return Divider();
+                  return const Divider();
                 })));
   }
 
   // Widget _buildInformationSection( salonData) {
   Widget _buildImageGallery(List<String> imageUrls) {
-    return Container(
+    return SizedBox(
       height: 150,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,

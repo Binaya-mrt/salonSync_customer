@@ -1,7 +1,11 @@
+// Dart imports:
 import 'dart:developer';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+// Flutter imports:
 import 'package:flutter/foundation.dart';
+
+// Package imports:
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AppointmentModel {
   final String customerId;
@@ -22,7 +26,7 @@ class AppointmentModel {
     required this.appointmentDateTime,
   });
 
-static DateTime convertToDate(String date, String hour) {
+  static DateTime convertToDate(String date, String hour) {
     DateTime parsedDate = DateTime.parse(date);
     int parsedHour = int.parse(hour.split(' ')[0]);
     if (hour.contains('PM') && parsedHour != 12) {
@@ -30,7 +34,8 @@ static DateTime convertToDate(String date, String hour) {
     } else if (hour.contains('AM') && parsedHour == 12) {
       parsedHour = 0;
     }
-    return DateTime(parsedDate.year, parsedDate.month, parsedDate.day, parsedHour);
+    return DateTime(
+        parsedDate.year, parsedDate.month, parsedDate.day, parsedHour);
   }
 
   Map<String, dynamic> toMap() {
@@ -58,15 +63,13 @@ class AppointmentService {
       log('Error booking appointment: $e');
     }
   }
+
   Future<bool> isSlotAvailable(
       String salonId, DateTime selectedDate, int slotStartTime) async {
-        
-           try {
-      
-      DateTime startTime = DateTime(
-          selectedDate.year, selectedDate.month, selectedDate.day, slotStartTime);
-      Timestamp startDateTime=Timestamp.fromDate(startTime);
-      
+    try {
+      DateTime startTime = DateTime(selectedDate.year, selectedDate.month,
+          selectedDate.day, slotStartTime);
+      Timestamp startDateTime = Timestamp.fromDate(startTime);
 
       // Query appointments that overlap with the selected slot
       QuerySnapshot querySnapshot = await appointmentsCollection
@@ -75,7 +78,7 @@ class AppointmentService {
           .get();
 
       // Check if there are any existing appointments in the selected slot
-      log(querySnapshot.docs.isEmpty.toString()+" khai k khai k ");
+      log("${querySnapshot.docs.isEmpty} khai k khai k ");
       return querySnapshot.docs.isEmpty;
     } catch (e) {
       debugPrint(' $e');
