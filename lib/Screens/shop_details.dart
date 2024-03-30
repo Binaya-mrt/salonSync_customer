@@ -434,32 +434,31 @@ class _SalonSetailState extends State<SalonSetail> {
                                       barrierDismissible: false,
                                       context: context,
                                       builder: (BuildContext context) {
-                                        return Expanded(
-                                            child: AlertDialog(
-                                          title: const Text(
-                                              'Booking Successfull !'), // To display the title it is optional
-                                          content: Text(
-                                              'You have booked your appointment for $selected_service_name on date $appointmentDatetime at ${doc['salon_name']} '), // Message which will be pop up on the screen
-                                          // Action widget which will provide the user to acknowledge the choice
-                                          actions: [
-                                            ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                  backgroundColor:
-                                                      themeColor), // FlatButton widget is used to make a text to work like a
-                                              onPressed: () {
-                                                Navigator.pushReplacement(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (BuildContext
-                                                                context) =>
-                                                            const DefaultPage(
-                                                              pageno: 0,
-                                                            )));
-                                              }, // function used to perform after pressing the button
-                                              child: const Text('OK'),
-                                            ),
-                                          ],
-                                        ));
+                                        return AlertDialog(
+                                                                                  title: const Text(
+                                          'Booking Successfull !'), // To display the title it is optional
+                                                                                  content: Text(
+                                          'You have booked your appointment for $selected_service_name on date ${DateFormat('yyyy-MMMM-dd hh a').format(appointmentDatetime)} at ${doc['salon_name']} '), // Message which will be pop up on the screen
+                                                                                  // Action widget which will provide the user to acknowledge the choice
+                                                                                  actions: [
+                                        ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                              backgroundColor:
+                                                  themeColor), // FlatButton widget is used to make a text to work like a
+                                          onPressed: () {
+                                            Navigator.pushReplacement(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (BuildContext
+                                                            context) =>
+                                                        const DefaultPage(
+                                                          pageno: 0,
+                                                        )));
+                                          }, // function used to perform after pressing the button
+                                          child: const Text('OK'),
+                                        ),
+                                                                                  ],
+                                                                                );
                                       },
                                     );
                                   } else {
