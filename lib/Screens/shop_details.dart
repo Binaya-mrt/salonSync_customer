@@ -347,14 +347,15 @@ class _SalonSetailState extends State<SalonSetail> {
                                 itemCount: doc['all_available_slots'].length,
                                 itemBuilder: (context, index) {
                                   String convertToReadableTime(
-                                      Timestamp timestamp) {
-                                    DateTime dateTime = timestamp.toDate();
+                                      int timestamp) {
+                                         int hourOfDay = timestamp % 24;
+                                    DateTime dateTime = DateTime(2024, 1, 1, hourOfDay);
                                     String formattedTime =
                                         DateFormat.jm().format(dateTime);
                                     return formattedTime;
                                   }
 
-                                  String getSalonTiming(Timestamp startTime) {
+                                  String getSalonTiming(int startTime) {
                                     String start =
                                         convertToReadableTime(startTime);
 
@@ -366,11 +367,12 @@ class _SalonSetailState extends State<SalonSetail> {
                                           ['slot_start_time']);
                                   return GestureDetector(
                                     onTap: () async {
-                                      DateTime slotStartHour =
-                                          doc['all_available_slots'][index]
-                                                  ['slot_start_time']
-                                              .toDate();
-                                      int hour = slotStartHour.hour;
+                                      // DateTime slotStartHour =
+                                      //     doc['all_available_slots'][index]
+                                      //             ['slot_start_time']
+                                      //         .toDate();
+                                      int hour = doc['all_available_slots'][index]
+                                                  ['slot_start_time'];
                                       log(hour.toString());
                                       bool isAvailable =
                                           await _appointmentService

@@ -314,7 +314,7 @@ class _HomePageState extends State<HomePage> {
                           width: 25,
                         ),
                     itemBuilder: (context, index) {
-                      for (var doc in documents) {
+                      // for (var doc in documents) {
                         return GestureDetector(
                           onTap: () {
                             
@@ -322,8 +322,8 @@ class _HomePageState extends State<HomePage> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => SalonSetail(
-                                          uid: doc['uid'],
-                                          name: doc['salon_name'],
+                                          uid: documents[index]['uid'],
+                                          name: documents[index]['salon_name'],
                                         )));
                           },
                           child: Container(
@@ -342,21 +342,21 @@ class _HomePageState extends State<HomePage> {
                                       decoration: BoxDecoration(
                                         image: DecorationImage(
                                             image: NetworkImage(
-                                                doc['salon_image']),
+                                                documents[index]['salon_image']),
                                             fit: BoxFit.cover),
                                         borderRadius: BorderRadius.circular(16),
                                       ),
                                     ),
                                     Text(
-                                      doc['salon_name'],
+                                      documents[index]['salon_name'],
                                       style: pstyle,
                                     ),
                                     Text(
-                                      doc['salon_address'],
+                                      documents[index]['salon_address'],
                                       style: pstyle,
                                     ),
                                     Text(
-                                      doc['salon_phone'],
+                                      documents[index]['salon_phone'],
                                       style: pstyle,
                                     ),
                                     Padding(
@@ -368,8 +368,8 @@ class _HomePageState extends State<HomePage> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => SalonSetail(
-                                          uid: doc['uid'],
-                                          name: doc['salon_name'],
+                                          uid: documents[index]['uid'],
+                                          name: documents[index]['salon_name'],
                                         )));
                                         },
                                         style: ElevatedButton.styleFrom(
@@ -389,8 +389,8 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                   ])),
                         );
-                      }
-                      return null;
+                      // }
+                      // return null;
                     }),
               );
             } else if (snapshot.hasError) {

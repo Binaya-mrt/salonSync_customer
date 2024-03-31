@@ -69,6 +69,7 @@ class AppointmentService {
     try {
       DateTime startTime = DateTime(selectedDate.year, selectedDate.month,
           selectedDate.day, slotStartTime);
+          
       Timestamp startDateTime = Timestamp.fromDate(startTime);
 
       // Query appointments that overlap with the selected slot
@@ -78,8 +79,9 @@ class AppointmentService {
           .get();
 
       // Check if there are any existing appointments in the selected slot
-      log("${querySnapshot.docs.isEmpty} khai k khai k ");
-      return querySnapshot.docs.isEmpty;
+      // bool isEmpty=querySnapshot.docs.isEmpty;
+
+      return querySnapshot.docs.isEmpty && !startTime.isBefore(DateTime.now());
     } catch (e) {
       debugPrint(' $e');
       return false;
