@@ -42,13 +42,64 @@ class _AppointmentState extends State<Appointment> {
             // final appointments = snapshot.data!.docs;
 
   // Sort appointments by appointmentDateTime
-  appointments.sort((a, b) {
-    // Convert appointmentDateTime to DateTime objects
-    DateTime dateTimeA = (a['appointmentDateTime'] as Timestamp).toDate();
-    DateTime dateTimeB = (b['appointmentDateTime'] as Timestamp).toDate();
-    // Compare appointmentDateTime
-    return dateTimeB.compareTo(dateTimeA); // Sort in descending order
-  });
+  // appointments.sort((a, b) {
+  //   // Convert appointmentDateTime to DateTime objects
+  //   DateTime dateTimeA = (a['appointmentDateTime'] as Timestamp).toDate();
+  //   DateTime dateTimeB = (b['appointmentDateTime'] as Timestamp).toDate();
+  //   // Compare appointmentDateTime
+  //   return dateTimeB.compareTo(dateTimeA); // Sort in descending order
+  // });
+  void merge(List<dynamic> arr, int left, int mid, int right) {
+  int n1 = mid - left + 1;
+  int n2 = right - mid;
+
+  List<dynamic> L = List.filled(n1, null, growable: false);
+  List<dynamic> R = List.filled(n2, null, growable: false);
+
+  for (int i = 0; i < n1; i++) L[i] = arr[left + i];
+  for (int j = 0; j < n2; j++) R[j] = arr[mid + 1 + j];
+
+  int i = 0, j = 0;
+  int k = left;
+
+  while (i < n1 && j < n2) {
+    if ((L[i]['appointmentDateTime'] as Timestamp)
+        .toDate()
+        .isAfter((R[j]['appointmentDateTime'] as Timestamp).toDate())) {
+      arr[k] = L[i];
+      i++;
+    } else {
+      arr[k] = R[j];
+      j++;
+    }
+    k++;
+  }
+
+  while (i < n1) {
+    arr[k] = L[i];
+    i++;
+    k++;
+  }
+
+  while (j < n2) {
+    arr[k] = R[j];
+    j++;
+    k++;
+  }
+}
+
+void mergeSort(List<dynamic> arr, int left, int right) {
+  if (left < right) {
+    int mid = (left + right) ~/ 2;
+
+    mergeSort(arr, left, mid);
+    mergeSort(arr, mid + 1, right);
+
+    merge(arr, left, mid, right);
+  }
+}
+// final appointments = snapshot.data!.docs;
+mergeSort(appointments, 0, appointments.length - 1);
             return ListView.builder(
               shrinkWrap: true,
               itemCount: appointments.length,
@@ -226,8 +277,7 @@ class _AppointmentListItemState extends State<AppointmentListItem> {
                       : const SizedBox(),
                 ],
               ),
-              // Add additional styling or actions as needed
-              // For example, you can add trailing icons for actions like cancel or update
+              
             ),
           );
         }

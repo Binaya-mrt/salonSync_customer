@@ -54,7 +54,7 @@ class _RegisterState extends State<Register> {
       isSalon: false,
       // profileImage: profileImage,
     );
-    log(res.toLowerCase());
+  
     if (res == "success") {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -65,8 +65,8 @@ class _RegisterState extends State<Register> {
           MaterialPageRoute(builder: (context) => const LoginPage()));
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Signup Failed"),
+         SnackBar(
+          content: Text(res),
         ),
       );
     }
@@ -165,7 +165,7 @@ class _RegisterState extends State<Register> {
                             multiLine: true,
                             r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                         .hasMatch(value)) {
-                      return 'This field must contain only letters and spaces.';
+                      return 'Please enter a valid email';
                     }
                     return null;
                   },
@@ -187,16 +187,16 @@ class _RegisterState extends State<Register> {
                           padding: const EdgeInsets.all(8.0),
                           child: TextFormField(
                             controller: _phoneController,
-                             validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'This field is required.';
-                    } else if (!RegExp(
-                            multiLine: true, r"^[(\+977)?[9][6-9]\d{8}]")
-                        .hasMatch(value)) {
-                      return 'This field must contain only letters and spaces.';
-                    }
-                    return null;
-                  },
+                  //            validator: (value) {
+                  //   if (value!.isEmpty) {
+                  //     return 'This field is required.';
+                  //   } else if (!RegExp(
+                  //           r"^[(\+977)?[9][6-9]\d{8}]")
+                  //       .hasMatch(value)) {
+                  //     return 'Please enter a valid phone number';
+                  //   }
+                  //   return null;
+                  // },
                             decoration: InputDecoration(
                                 hintText: 'Mobile',
                                 labelText: 'Mobile',

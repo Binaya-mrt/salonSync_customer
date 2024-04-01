@@ -431,7 +431,7 @@ class _SalonSetailState extends State<SalonSetail> {
                                                 appointmentDatetime);
                                     log(appointment.toString());
                                     _appointmentService
-                                        .bookAppointment(appointment);
+                                        .bookAppointment(appointment,context);
                                     showDialog(
                                       barrierDismissible: false,
                                       context: context,

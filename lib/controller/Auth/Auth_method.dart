@@ -80,6 +80,7 @@ class AuthMethod {
       res = "success";
     } on FirebaseAuthException catch (err) {
       res = err.message.toString();
+      
     } catch (err) {
       res = err.toString();
     }

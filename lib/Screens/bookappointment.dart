@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 
 // Package imports:
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:salonsync/constants.dart';
 
 class AppointmentModel {
   final String customerId;
@@ -55,11 +56,12 @@ class AppointmentService {
   final CollectionReference appointmentsCollection =
       FirebaseFirestore.instance.collection('Appointments');
 
-  Future<void> bookAppointment(AppointmentModel appointment) async {
+  Future<void> bookAppointment(AppointmentModel appointment,context) async {
     try {
       await appointmentsCollection.add(appointment.toMap());
-      log('Appointment booked successfully.');
+    
     } catch (e) {
+       Utils().showSnackBar(context, e.toString());
       log('Error booking appointment: $e');
     }
   }
@@ -78,12 +80,9 @@ class AppointmentService {
           .where('appointmentDateTime', isEqualTo: startDateTime)
           .get();
 
-      // Check if there are any existing appointments in the selected slot
-      // bool isEmpty=querySnapshot.docs.isEmpty;
-
       return querySnapshot.docs.isEmpty && !startTime.isBefore(DateTime.now());
     } catch (e) {
-      debugPrint(' $e');
+      
       return false;
     }
   }
