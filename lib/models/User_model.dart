@@ -11,7 +11,7 @@ class UserDetails {
   final String phoneNumber;
   String? image;
   String? uid;
-  List<Appointment>? appointments;
+  
 
   UserDetails({
     required this.name,
@@ -20,7 +20,7 @@ class UserDetails {
     required this.phoneNumber,
     this.image,
     this.uid,
-    this.appointments,
+   
   });
   Map<String, dynamic> toMap() => {
         "name": name,
@@ -29,8 +29,8 @@ class UserDetails {
         "uid": uid,
         "phone_number": phoneNumber,
         "image": image,
-        "appointments":
-            List<Appointment>.from(appointments!.map((x) => x.toMap())),
+      
+           
       };
 
   static UserDetails fromSnap(DocumentSnapshot snap) {
@@ -42,10 +42,7 @@ class UserDetails {
         name: snapshot['name'],
         address: snapshot['address'],
         //
-        appointments: snapshot['Appointments']
-            .map((p) => Appointment.fromJson(p))
-            .toList()
-            .cast<Appointment>(),
+       
         phoneNumber: snapshot['phone']
         // image: snapshot['image'],
 
