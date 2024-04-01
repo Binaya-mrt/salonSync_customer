@@ -75,12 +75,12 @@ class AuthMethod {
         "phone": phone,
         "uid": cred.user!.uid,
         "isSalon": isSalon,
-        "Appointments": []
+       
       });
       res = "success";
     } on FirebaseAuthException catch (err) {
       res = err.message.toString();
-      
+
     } catch (err) {
       res = err.toString();
     }
