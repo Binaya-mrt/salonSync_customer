@@ -27,6 +27,7 @@ class _AppointmentState extends State<Appointment> {
         future: FirebaseFirestore.instance
             .collection('Appointments')
             .where('customerId', isEqualTo: PreferenceUtils.getString('uuid'))
+             // Order appointments by date
             .get(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -37,6 +38,17 @@ class _AppointmentState extends State<Appointment> {
             return const Center(child: Text('No appointments found.'));
           } else {
             final appointments = snapshot.data!.docs;
+
+            // final appointments = snapshot.data!.docs;
+
+  // Sort appointments by appointmentDateTime
+  appointments.sort((a, b) {
+    // Convert appointmentDateTime to DateTime objects
+    DateTime dateTimeA = (a['appointmentDateTime'] as Timestamp).toDate();
+    DateTime dateTimeB = (b['appointmentDateTime'] as Timestamp).toDate();
+    // Compare appointmentDateTime
+    return dateTimeB.compareTo(dateTimeA); // Sort in descending order
+  });
             return ListView.builder(
               shrinkWrap: true,
               itemCount: appointments.length,
@@ -53,40 +65,6 @@ class _AppointmentState extends State<Appointment> {
   }
 }
 
-// void _showBottomSheet(BuildContext context, DocumentSnapshot appointment) {
-//   showModalBottomSheet(
-//     context: context,
-//     builder: (BuildContext context) {
-//       return Container(
-//         padding: EdgeInsets.all(16.0),
-//         child: Column(
-//           mainAxisSize: MainAxisSize.min,
-//           children: <Widget>[
-//             Text('Appointment Details'),
-//             SizedBox(height: 16.0),
-//             Text('Title: ${appointment['serviceName']}'),
-//             Text('Status: ${appointment['status']}'),
-//             SizedBox(height: 16.0),
-//             ElevatedButton(
-//               onPressed: () {
-//                 // Perform cancel operation
-//                 Navigator.pop(context);
-//               },
-//               child: Text('Cancel Appointment'),
-//             ),
-//             ElevatedButton(
-//               onPressed: () {
-//                 // Perform update operation
-//                 Navigator.pop(context);
-//               },
-//               child: Text('Update Appointment'),
-//             ),
-//           ],
-//         ),
-//       );
-//     },
-//   );
-// }
 
 AppBar appBar(BuildContext context) {
   return AppBar(
@@ -97,11 +75,11 @@ AppBar appBar(BuildContext context) {
     centerTitle: true,
     elevation: 0,
     backgroundColor: bgColor,
-    leading: Container(
-        margin: const EdgeInsets.all(14),
-        child: const CircleAvatar(
-          radius: 30,
-        )),
+    // leading: Container(
+    //     margin: const EdgeInsets.all(14),
+    //     child: const CircleAvatar(
+    //       radius: 30,
+    //     )),
     actions: [
       IconButton(
           onPressed: () {
@@ -119,18 +97,23 @@ AppBar appBar(BuildContext context) {
   );
 }
 
-class AppointmentListItem extends StatelessWidget {
+class AppointmentListItem extends StatefulWidget {
   final DocumentSnapshot appointment;
 
   const AppointmentListItem({super.key, required this.appointment});
 
   @override
+  State<AppointmentListItem> createState() => _AppointmentListItemState();
+}
+
+class _AppointmentListItemState extends State<AppointmentListItem> {
+  @override
   Widget build(BuildContext context) {
-    final salonId = appointment['salonId'];
-    final serviceName = appointment['serviceName'];
-    final status = appointment['status'];
-    final price = appointment['price'];
-    final appointmentDateTime = appointment['appointmentDateTime'];
+    final salonId = widget.appointment['salonId'];
+    final serviceName = widget.appointment['serviceName'];
+    final status = widget.appointment['status'];
+    final price = widget.appointment['price'];
+    final appointmentDateTime = widget.appointment['appointmentDateTime'];
 
     // Fetch salon details from Firestore using salon ID
     return FutureBuilder<DocumentSnapshot>(
@@ -143,6 +126,9 @@ class AppointmentListItem extends StatelessWidget {
         } else if (!snapshot.hasData) {
           return const Text('Salon details not found');
         } else {
+           
+
+    
           final salonName = snapshot.data!['salon_name'];
           Timestamp timestamp = appointmentDateTime;
           DateTime dateTime = timestamp.toDate();
@@ -151,7 +137,7 @@ class AppointmentListItem extends StatelessWidget {
           return Card(
             margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
             child: ListTile(
-              trailing: appointment['status'] == 'Pending'
+              trailing: widget.appointment['status'] == 'Pending'
                   ? IconButton(
                       icon: Icon(
                         Icons.delete_forever,
@@ -174,7 +160,7 @@ class AppointmentListItem extends StatelessWidget {
                                 ),
                                 ElevatedButton(
                                   onPressed: () async {
-                                    await appointment.reference
+                                    await widget.appointment.reference
                                         .update({'status': 'Cancelled'});
                                     Navigator.pop(context); // Close the dialog
                                   },
@@ -202,7 +188,7 @@ class AppointmentListItem extends StatelessWidget {
                   ),
                   Text('Price: NPR $price'),
                   Text('Appointment Date: $formattedDateTime'),
-                  appointment['status'] == 'Pending'
+                  widget.appointment['status'] == 'Pending'
                       ? TextButton(
                           onPressed: () {
                             showDialog(
@@ -221,7 +207,7 @@ class AppointmentListItem extends StatelessWidget {
                                     ),
                                     ElevatedButton(
                                       onPressed: () async {
-                                        await appointment.reference
+                                        await widget.appointment.reference
                                             .update({'status': 'Cancelled'});
                                         Navigator.pop(
                                             context); // Close the dialog

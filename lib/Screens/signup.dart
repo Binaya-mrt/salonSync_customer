@@ -158,12 +158,17 @@ class _RegisterState extends State<Register> {
                           padding: const EdgeInsets.all(8.0),
                           child: TextFormField(
                             controller: _emailController,
-                            validator: MultiValidator([
-                              RequiredValidator(
-                                  errorText: 'Enter email address'),
-                              EmailValidator(
-                                  errorText: 'Please correct email filled'),
-                            ]).call,
+                            validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'This field is required.';
+                    } else if (!RegExp(
+                            multiLine: true,
+                            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                        .hasMatch(value)) {
+                      return 'This field must contain only letters and spaces.';
+                    }
+                    return null;
+                  },
                             decoration: InputDecoration(
                                 hintText: 'Email',
                                 labelText: 'Email',
@@ -182,6 +187,16 @@ class _RegisterState extends State<Register> {
                           padding: const EdgeInsets.all(8.0),
                           child: TextFormField(
                             controller: _phoneController,
+                             validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'This field is required.';
+                    } else if (!RegExp(
+                            multiLine: true, r"^[(\+977)?[9][6-9]\d{8}]")
+                        .hasMatch(value)) {
+                      return 'This field must contain only letters and spaces.';
+                    }
+                    return null;
+                  },
                             decoration: InputDecoration(
                                 hintText: 'Mobile',
                                 labelText: 'Mobile',

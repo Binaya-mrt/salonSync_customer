@@ -114,12 +114,12 @@ class _HomePageState extends State<HomePage> {
       centerTitle: true,
       elevation: 0,
       backgroundColor: bgColor,
-      leading: Container(
-          margin: const EdgeInsets.all(14),
-          child: const CircleAvatar(
-            backgroundImage: AssetImage('assets/images/user-image.png'),
-            radius: 30,
-          )),
+      // leading: Container(
+      //     margin: const EdgeInsets.all(14),
+      //     child: const CircleAvatar(
+      //       backgroundImage: AssetImage('assets/images/user-image.png'),
+      //       radius: 30,
+      //     )),
       actions: [
         IconButton(
             onPressed: () {
@@ -197,74 +197,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // Column _categoriesSection() {
-  //   return Column(
-  //     crossAxisAlignment: CrossAxisAlignment.start,
-  //     children: [
-  //       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-  //         const Padding(
-  //           padding: EdgeInsets.only(left: 20, bottom: 10, top: 20),
-  //           child: Text(
-  //             'Category',
-  //             style: TextStyle(
-  //                 color: Colors.white,
-  //                 fontSize: 22,
-  //                 fontWeight: FontWeight.w600),
-  //           ),
-  //         ),
-  //         Padding(
-  //           padding: EdgeInsets.only(left: 20, bottom: 10, top: 20, right: 10),
-  //           child: Text(
-  //             'View All',
-  //             style: TextStyle(
-  //                 color: themeColor, fontSize: 18, fontWeight: FontWeight.w200),
-  //           ),
-  //         ),
-  //       ]),
-  //       const SizedBox(
-  //         height: 10,
-  //       ),
-  //       Container(
-  //         height: 130,
-  //         child: ListView.separated(
-  //           itemCount: 6,
-  //           scrollDirection: Axis.horizontal,
-  //           padding: const EdgeInsets.only(left: 20, right: 20),
-  //           separatorBuilder: (context, index) => const SizedBox(
-  //             width: 25,
-  //           ),
-  //           itemBuilder: (context, index) {
-  //             List<String> _services = [
-  //               'Barbar',
-  //               'Shaving',
-  //               'Haricut',
-  //               'Straight',
-  //               'Barbar',
-  //               'Shaving',
-  //               'Haricut',
-  //             ];
-  //             return Column(
-  //               children: [
-  //                 CircleAvatar(
-  //                   backgroundImage:
-  //                       AssetImage('assets/images/s${index + 1}.png'),
-  //                   radius: 40,
-  //                 ),
-  //                 Text(
-  //                   _services[index],
-  //                   style: const TextStyle(
-  //                       fontWeight: FontWeight.w400,
-  //                       color: Colors.white,
-  //                       fontSize: 17),
-  //                 ),
-  //               ],
-  //             );
-  //           },
-  //         ),
-  //       )
-  //     ],
-  //   );
-  // }
 
   Column _featuredBarbers() {
     return Column(
@@ -274,24 +206,14 @@ class _HomePageState extends State<HomePage> {
           const Padding(
             padding: EdgeInsets.only(left: 20, bottom: 10, top: 20),
             child: Text(
-              'Featured Salons',
+              'All Salons',
               style: TextStyle(
                   color: Colors.white,
                   fontSize: 22,
                   fontWeight: FontWeight.w600),
             ),
           ),
-          Padding(
-            padding:
-                const EdgeInsets.only(left: 20, bottom: 10, top: 20, right: 10),
-            child: TextButton(
-              onPressed: (){},
-
-              child:Text('View All',
-              style: TextStyle(
-                  color: themeColor, fontSize: 18, fontWeight: FontWeight.w200),
-            ),),
-          ),
+          
         ]),
         const SizedBox(
           height: 10,
@@ -303,15 +225,16 @@ class _HomePageState extends State<HomePage> {
               final List<DocumentSnapshot> documents = snapshot.data!.docs;
 
               return SizedBox(
-                height: 280,
+              
                 // color:Colors.red,
                 child: ListView.separated(
+                  shrinkWrap: true,
                     itemCount: documents.length,
-                    scrollDirection: Axis.horizontal,
+                    scrollDirection: Axis.vertical,
                     padding:
                         const EdgeInsets.only(left: 20, right: 20, bottom: 20),
                     separatorBuilder: (context, index) => const SizedBox(
-                          width: 25,
+                          height: 25,
                         ),
                     itemBuilder: (context, index) {
                       // for (var doc in documents) {
