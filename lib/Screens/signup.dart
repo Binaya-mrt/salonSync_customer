@@ -187,16 +187,15 @@ class _RegisterState extends State<Register> {
                           padding: const EdgeInsets.all(8.0),
                           child: TextFormField(
                             controller: _phoneController,
-                  //            validator: (value) {
-                  //   if (value!.isEmpty) {
-                  //     return 'This field is required.';
-                  //   } else if (!RegExp(
-                  //           r"^[(\+977)?[9][6-9]\d{8}]")
-                  //       .hasMatch(value)) {
-                  //     return 'Please enter a valid phone number';
-                  //   }
-                  //   return null;
-                  // },
+                             validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'This field is required.';
+                    } else if (!RegExp(r'^9[6-8]\d{8}$')
+                        .hasMatch(value)) {
+                      return 'Please enter a valid phone number';
+                    }
+                    return null;
+                  },
                             decoration: InputDecoration(
                                 hintText: 'Mobile',
                                 labelText: 'Mobile',

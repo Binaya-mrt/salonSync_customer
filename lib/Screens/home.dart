@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:image_network/image_network.dart';
 
 // Project imports:
 import 'package:salonsync/constants.dart';
@@ -261,14 +262,19 @@ class _HomePageState extends State<HomePage> {
                                   children: [
                                     Container(
                                       height: 150,
-                                      width: 200,
+                                     
                                       decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                            image: NetworkImage(
-                                                documents[index]['salon_image']),
-                                            fit: BoxFit.cover),
-                                        borderRadius: BorderRadius.circular(16),
+                                        // image: DecorationImage(
+                                        //     image: NetworkImage(
+                                        //         documents[index]['salon_image']),
+                                        //     fit: BoxFit.cover),
+                                        // borderRadius: BorderRadius.circular(16),
                                       ),
+                                      child: ImageNetwork(
+                                        image: documents[index]['salon_image'],
+                                     height:150,
+                                      width: MediaQuery.of(context).size.width,
+                                        ),
                                     ),
                                     Text(
                                       documents[index]['salon_name'],

@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:horizontal_center_date_picker/datepicker_controller.dart';
 import 'package:horizontal_center_date_picker/horizontal_date_picker.dart';
+import 'package:image_network/image_network.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -101,20 +102,20 @@ class _SalonSetailState extends State<SalonSetail> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         // mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          // ImageNetwork(
+                          ImageNetwork(
 
-                          //   image: doc['salon_image'],
-                          //   height: 300,
-                          //   width: MediaQuery.of(context).size.width,
-                          //   fitWeb: BoxFitWeb.cover,
-                          // ),
-                          Container(
+                            image: doc['salon_image'],
                             height: 300,
-                            decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    image: NetworkImage(doc['salon_image']),
-                                    fit: BoxFit.cover)),
+                            width: MediaQuery.of(context).size.width,
+                            fitWeb: BoxFitWeb.cover,
                           ),
+                          // Container(
+                          //   height: 300,
+                          //   decoration: BoxDecoration(
+                          //       image: DecorationImage(
+                          //           image: NetworkImage(doc['salon_image']),
+                          //           fit: BoxFit.cover)),
+                          // ),
 
                           Padding(
                             padding: const EdgeInsets.only(top: 8.0),
